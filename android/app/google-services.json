@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "106373867927",
+    "project_id": "medical-empire-d5c9a",
+    "storage_bucket": "medical-empire-d5c9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106373867927:android:d698620e25776142f3fcd2",
+        "android_client_info": {
+          "package_name": "com.medicalempire.medical"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106373867927-q4srtk329ebli0jrfuhld7bnqjfvlfe8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.medicalempire.medical",
+            "certificate_hash": "211e6c9b39f8a376e7215578bb9fddd42f0bc381"
+          }
+        },
+        {
+          "client_id": "106373867927-ufdtnk6lf2fp9aqq039al4r46l5jg102.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.medicalempire.medical",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "106373867927-q7oj5kj6091tleblttj1tneqbaa1bc0k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9uJ94zIfzti7U12okE-cw7Zxny_BUMtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106373867927-q7oj5kj6091tleblttj1tneqbaa1bc0k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106373867927-l4giueeqptst7s45amfpe41plmtk8lth.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ClueApps.MedicalEmpire",
+                "app_store_id": "1465106135"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
