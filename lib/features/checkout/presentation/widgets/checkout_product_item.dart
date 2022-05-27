@@ -71,13 +71,15 @@ class CheckoutProductItem extends StatelessWidget {
                           color: HexColor(secondaryVariantDark),
                         ),
                       ),
-                      space4Horizontal,
+                      space3Horizontal,
                       GestureDetector(
                         onTap: (){
-                          cartItem.quantity++;
-                          quantitySubject.sink.add(cartItem.quantity);
-                          MainCubit.get(context).sumSubTotalCart();
-                          MainCubit.get(context).calculateFinalTotalCart();
+                          if (cartItem.quantity < cartItem.stock){
+                            cartItem.quantity++;
+                            quantitySubject.sink.add(cartItem.quantity);
+                            MainCubit.get(context).sumSubTotalCart();
+                            MainCubit.get(context).calculateFinalTotalCart();
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor,shape: BoxShape.circle,
@@ -92,7 +94,7 @@ class CheckoutProductItem extends StatelessWidget {
                             padding: const EdgeInsets.all(4),
                             child: Icon(Icons.add , color: Theme.of(context).primaryColor,size: 16,)),
                       ),
-                      space8Horizontal,
+                      space6Horizontal,
                       StreamBuilder<int>(
                         stream: quantitySubject.stream,
                         builder: (context, snapshot) {
@@ -106,14 +108,15 @@ class CheckoutProductItem extends StatelessWidget {
                             );
                         }
                       ),
-                      space8Horizontal,
+                      space6Horizontal,
                       GestureDetector(
                         onTap: (){
-                          cartItem.quantity--;
-                          quantitySubject.sink.add(cartItem.quantity);
-                          MainCubit.get(context).sumSubTotalCart();
-                          MainCubit.get(context).calculateFinalTotalCart();
-                        },
+                          if (cartItem.quantity > 0){
+                            cartItem.quantity--;
+                            quantitySubject.sink.add(cartItem.quantity);
+                            MainCubit.get(context).sumSubTotalCart();
+                            MainCubit.get(context).calculateFinalTotalCart();
+                          }},
                         child: Container(
                             decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor,shape: BoxShape.circle,
                             boxShadow: [
