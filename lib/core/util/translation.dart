@@ -172,29 +172,27 @@ class TranslationModel {
   late String extra_shipping;
   late String areYouSureRemoveCart;
 
-
-
   late String streetNameEmpty;
   late String buildingNumberEmpty;
   late String specialMarkerEmpty;
+  late String personalInformation;
+  late String yourComment;
 
   TranslationModel.fromJson(Map<String, dynamic> json) {
+    overweight_price = json['overweight_price'];
+    extra_shipping = json['extra_shipping'];
 
-    overweight_price =  json['overweight_price'];
-    extra_shipping =  json['extra_shipping'];
+    proceedCheckout = json['proceedCheckout'];
+    signFirst = json['signFirst'];
 
-    proceedCheckout =  json['proceedCheckout'];
-    signFirst =  json['signFirst'];
-
-    completeOrder =  json['completeOrder'];
-    pleaseSelectColor =  json['pleaseSelectColor'];
-    pleaseSelectSize =  json['pleaseSelectSize'];
-    aboutUsText =  json['aboutUsText'];
+    completeOrder = json['completeOrder'];
+    pleaseSelectColor = json['pleaseSelectColor'];
+    pleaseSelectSize = json['pleaseSelectSize'];
+    aboutUsText = json['aboutUsText'];
 
     streetNameEmpty = json['streetNameEmpty'];
     buildingNumberEmpty = json['buildingNumberEmpty'];
     specialMarkerEmpty = json['specialMarkerEmpty'];
-
 
     pleaseSelectColor = json['pleaseSelectColor'];
     pleaseSelectSize = json['pleaseSelectSize'];
@@ -364,6 +362,8 @@ class TranslationModel {
     add_some_products_to_wish_list = json['add_some_products_to_wish_list'];
     are_you_sure_to_remove = json['are_you_sure_to_remove'];
     areYouSureRemoveCart = json['areYouSureRemoveCart'];
+    personalInformation = json['personalInformation'];
+    yourComment = json['yourComment'];
   }
 
 // Map toJson() => {

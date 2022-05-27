@@ -159,5 +159,7 @@
   "streetNameEmpty": "ادخل اسم الشارع",
   "buildingNumberEmpty": "ادخل رقم البناء",
   "areYouSureRemoveCart": "تاكيد الحذف من السلة",
-  "specialMarkerEmpty": "ادخل علامة مميزة"
+  "specialMarkerEmpty": "ادخل علامة مميزة",
+  "personalInformation": "معلوماتك الشخصيه",
+  "yourComment": "اضف تعليقا بخصوص طلبك (اختياري)"
 }

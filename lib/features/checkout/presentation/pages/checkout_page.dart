@@ -9,6 +9,7 @@ import 'package:medical_empire_app/core/util/cubit/state.dart';
 import 'package:medical_empire_app/core/util/widgets/back_scaffold.dart';
 import 'package:medical_empire_app/core/util/widgets/my_button.dart';
 import 'package:medical_empire_app/core/util/widgets/shipping_address_form.dart';
+import 'package:medical_empire_app/core/util/widgets/user_account_details_widget.dart';
 import 'package:medical_empire_app/features/checkout/presentation/widgets/address_item.dart';
 import 'package:medical_empire_app/features/checkout/presentation/widgets/box_item.dart';
 import 'package:medical_empire_app/features/checkout/presentation/widgets/cash_section.dart';
@@ -28,6 +29,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   TextEditingController streetNameController = TextEditingController();
   TextEditingController buildNumberAddressController = TextEditingController();
   TextEditingController specialController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+  final nameController = TextEditingController();
+
+  final emailController = TextEditingController();
+
+  final phoneController = TextEditingController();
 
   final ScrollController _scrollController = ScrollController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -38,6 +45,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
     MainCubit.get(context).getCheckout();
     MainCubit.get(context).getMyAddress();
+    nameController.text = MainCubit.get(context).myAccountModel!.data.name;
+    emailController.text = MainCubit.get(context).myAccountModel!.data.email;
+    phoneController.text = MainCubit.get(context).myAccountModel!.data.phone;
   }
 
   @override
@@ -100,6 +110,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       space15Vertical,
                       BoxItem(
+                        title: appTranslation(context).personalInformation,
+                        child: buildPersonalInformationWidget(),
+                      ),
+                      space15Vertical,
+                      BoxItem(
                         title: appTranslation(context).payment_method,
                         child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
@@ -150,6 +165,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       space15Vertical,
                       BoxItem(
+                          title: appTranslation(context).yourComment,
+                          child: notesWidget()),
+                      space15Vertical,
+                      BoxItem(
                         title: appTranslation(context).total,
                         child: const CashSection(),
                       ),
@@ -160,6 +179,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         MyButton(
                           voidCallback: () {
                             saveAddress();
+                            saveProfileInformation();
                             MainCubit.get(context).createCheckout();
                           },
                           text: appTranslation(context).completeOrder,
@@ -232,5 +252,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     print(governorateController.text);
     print(cityController.text);
+  }
+
+  buildPersonalInformationWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+      child: UserAccountDetailsWidget(
+          nameController: nameController,
+          emailController: emailController,
+          phoneController: phoneController),
+    );
+  }
+
+  void saveProfileInformation() {
+    MainCubit.get(context).updateAccount(
+        name: nameController.text,
+        email: emailController.text,
+        phone: phoneController.text);
+  }
+
+  notesWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: TextField(
+        controller: notesController,
+        keyboardType: TextInputType.multiline,
+        maxLines: 3,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+        ),
+      ),
+    );
   }
 }
