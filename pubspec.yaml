@@ -54,7 +54,7 @@ dependencies:
   connectivity: ^3.0.6
   lottie: ^1.2.1
   image_picker: ^0.8.4+4
-
+  rxdart: ^0.27.3
   firebase_core: ^1.8.0
   firebase_messaging: ^11.1.0
 

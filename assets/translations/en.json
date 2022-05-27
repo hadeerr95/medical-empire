@@ -162,5 +162,6 @@
   "areYouSureRemoveCart": "Are you sure to remove from cart",
   "specialMarkerEmpty": "Special Marker can't be empty",
   "personalInformation": "Your Personal Information",
-  "yourComment": "Add Your Comment (optional)"
+  "yourComment": "Add Your Comment (optional)",
+  "overWeightTax": "Over Weight Tax"
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:medical_empire_app/core/models/cart_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/cubit/state.dart';
@@ -50,6 +51,7 @@ class CashSection extends StatelessWidget {
               height: 1.0,
               color: Theme.of(context).scaffoldBackgroundColor,
             ),
+            cashForWeight(context),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 15.0,
@@ -141,5 +143,51 @@ class CashSection extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget cashForWeight(context) {
+    int overWeightTax = 0;
+    MainCubit.get(context).cartMap.forEach((key, item) {
+      if(item.weight !=null && int.parse(item.weight!) > 10){
+        overWeightTax += 10;
+      }
+    });
+    if(overWeightTax > 0) {
+      return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15.0,
+            vertical: 13.0,
+          ),
+          child: Row(
+            children: [
+              Text(
+                appTranslation(context).overWeightTax,
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  color: HexColor(secondaryVariantDark),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '$overWeightTax ${appTranslation(context).egp}',
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  color: HexColor(secondaryVariantDark),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: 1.0,
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+      ],
+    );
+    } else {
+      return  const SizedBox();
+    }
   }
 }

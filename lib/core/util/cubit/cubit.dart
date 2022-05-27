@@ -1621,12 +1621,15 @@ class MainCubit extends Cubit<MainState> {
   }
 
   void cancelOrderDetails() async {
-
-    print(' --------------------------------------------cancelOrderDetails error');
+    print(
+        ' --------------------------------------------cancelOrderDetails error');
     emit(CancelOrderDetailsLoading());
-    await _repository.orderCancel(orderId:  orderDetailsModel!.data.order.id).then((value) {
+    await _repository
+        .orderCancel(orderId: orderDetailsModel!.data.order.id)
+        .then((value) {
       getOrders();
-      print(' --------------------------------------------cancelOrderDetails success');
+      print(
+          ' --------------------------------------------cancelOrderDetails success');
       emit(CancelOrderDetailsSuccess());
     }).catchError((error) {
       print(error.toString());
@@ -1636,16 +1639,15 @@ class MainCubit extends Cubit<MainState> {
     });
   }
 
-  double totalAmount(){
+  double totalAmount() {
     double amount = 0;
 
-    amount = double.parse(orderDetailsModel!.data.order.totalAmount)
-        + double.parse(orderDetailsModel!.data.order.shipping_price)
-        + double.parse(orderDetailsModel!.data.order.extra_shipping)
-        + double.parse(orderDetailsModel!.data.order.overweight_price);
+    amount = double.parse(orderDetailsModel!.data.order.totalAmount) +
+        double.parse(orderDetailsModel!.data.order.shipping_price) +
+        double.parse(orderDetailsModel!.data.order.extra_shipping) +
+        double.parse(orderDetailsModel!.data.order.overweight_price);
     return amount;
   }
-
 
 // getOrderDetails ----------------------end
 
@@ -1767,7 +1769,9 @@ class MainCubit extends Cubit<MainState> {
         id: e.id,
         quantity: e.quantity,
         attributes: CreateCheckoutItemModelAttributes(
-          image: e.attributeImage != null ? e.attributeImage!.split('/').last: null,
+          image: e.attributeImage != null
+              ? e.attributeImage!.split('/').last
+              : null,
           size: e.size,
           type: e.color != null
               ? 'color'
@@ -1945,6 +1949,14 @@ class MainCubit extends Cubit<MainState> {
     //   element.vendorId
     // });
   }
+
 // sum shipping  ----------------------end
 
+  // calculate Final total cart
+  calculateFinalTotalCart() {
+    finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+    if (couponsModel != null && couponsModel!.data != null) {
+      finalTotalCart -= couponsModel!.data!.coupon.amount;
+    }
+  }
 }

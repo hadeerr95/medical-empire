@@ -161,5 +161,6 @@
   "areYouSureRemoveCart": "تاكيد الحذف من السلة",
   "specialMarkerEmpty": "ادخل علامة مميزة",
   "personalInformation": "معلوماتك الشخصيه",
-  "yourComment": "اضف تعليقا بخصوص طلبك (اختياري)"
+  "yourComment": "اضف تعليقا بخصوص طلبك (اختياري)",
+  "overWeightTax": "ضربية الوزن الزائد "
 }

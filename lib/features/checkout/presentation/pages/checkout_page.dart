@@ -15,6 +15,7 @@ import 'package:medical_empire_app/features/checkout/presentation/widgets/box_it
 import 'package:medical_empire_app/features/checkout/presentation/widgets/cash_section.dart';
 import 'package:medical_empire_app/features/checkout/presentation/widgets/checkout_product_item.dart';
 import 'package:medical_empire_app/features/checkout/presentation/widgets/payment_item.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   TextEditingController specialController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final nameController = TextEditingController();
+  final BehaviorSubject<int> _quantitySubject = BehaviorSubject<int>();
 
   final emailController = TextEditingController();
 
@@ -45,11 +47,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
     MainCubit.get(context).getCheckout();
     MainCubit.get(context).getMyAddress();
+    MainCubit.get(context).calculateFinalTotalCart();
     nameController.text = MainCubit.get(context).myAccountModel!.data.name;
     emailController.text = MainCubit.get(context).myAccountModel!.data.email;
     phoneController.text = MainCubit.get(context).myAccountModel!.data.phone;
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _quantitySubject.close();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return BackScaffold(
@@ -153,6 +161,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         space15Vertical,
                                         CheckoutProductItem(
                                           cartItem: value,
+                                          quantitySubject:_quantitySubject ,
                                         ),
                                       ],
                                     ),

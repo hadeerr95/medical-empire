@@ -3,11 +3,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:medical_empire_app/core/models/cart_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CheckoutProductItem extends StatelessWidget {
   final CartModel cartItem;
-
-  const CheckoutProductItem({Key? key, required this.cartItem})
+  final BehaviorSubject<int> quantitySubject ;
+  const CheckoutProductItem({Key? key, required this.cartItem,required this.quantitySubject,  })
       : super(key: key);
 
   @override
@@ -50,21 +51,83 @@ class CheckoutProductItem extends StatelessWidget {
                   space10Vertical,
                   Row(
                     children: [
-                      Text(
-                        '${appTranslation(context).egp} ${int.parse(cartItem.price) * cartItem.quantity}',
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: HexColor(mainColor),
-                            ),
+                      StreamBuilder<int>(
+                        stream: quantitySubject.stream,
+                        builder: (context, snapshot) {
+                          return Text(
+                            '${appTranslation(context).egp} ${int.parse(cartItem.price) * (snapshot.data ?? cartItem.quantity)}',
+                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor(mainColor),
+                                ),
+                          );
+                        }
                       ),
                       const Spacer(),
                       Text(
-                        '${appTranslation(context).quantity} : ${cartItem.quantity}',
+                        '${appTranslation(context).quantity} :',
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: HexColor(secondaryVariantDark),
-                            ),
+                          fontWeight: FontWeight.w700,
+                          color: HexColor(secondaryVariantDark),
+                        ),
                       ),
+                      space4Horizontal,
+                      GestureDetector(
+                        onTap: (){
+                          cartItem.quantity++;
+                          quantitySubject.sink.add(cartItem.quantity);
+                          MainCubit.get(context).sumSubTotalCart();
+                          MainCubit.get(context).calculateFinalTotalCart();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor,shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 4,
+                                    spreadRadius: 2,
+                                    color: Colors.grey.shade400,
+                                    offset: const Offset(1,1)
+                                )
+                              ]),
+                            padding: const EdgeInsets.all(4),
+                            child: Icon(Icons.add , color: Theme.of(context).primaryColor,size: 16,)),
+                      ),
+                      space8Horizontal,
+                      StreamBuilder<int>(
+                        stream: quantitySubject.stream,
+                        builder: (context, snapshot) {
+                          return Text(
+                            snapshot.data == null ? '${cartItem.quantity}' :
+                            '${snapshot.data}',
+                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor(secondaryVariantDark),
+                                ),
+                            );
+                        }
+                      ),
+                      space8Horizontal,
+                      GestureDetector(
+                        onTap: (){
+                          cartItem.quantity--;
+                          quantitySubject.sink.add(cartItem.quantity);
+                          MainCubit.get(context).sumSubTotalCart();
+                          MainCubit.get(context).calculateFinalTotalCart();
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor,shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                spreadRadius: 2,
+                                color: Colors.grey.shade400,
+                                offset: const Offset(1,1)
+                              )
+                            ]),
+                            padding: const EdgeInsets.all(4),
+                            child: Icon(Icons.remove , color: Theme.of(context).primaryColor,size: 16,)),
+                      ),
+
                     ],
                   ),
                   const Spacer(),
