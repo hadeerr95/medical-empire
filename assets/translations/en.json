@@ -163,5 +163,6 @@
   "specialMarkerEmpty": "Special Marker can't be empty",
   "personalInformation": "Your Personal Information",
   "yourComment": "Add Your Comment (optional)",
-  "overWeightTax": "Over Weight Tax"
+  "overWeightTax": "Over Weight Tax",
+  "couponEmpty": "Enter coupon first please!"
 }
