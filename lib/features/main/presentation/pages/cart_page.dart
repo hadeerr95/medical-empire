@@ -17,8 +17,9 @@ import 'package:medical_empire_app/features/main/presentation/widgets/single_car
 class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formKey = GlobalKey();
     return BlocConsumer<MainCubit, MainState>(
-      listener: (context, state){
+      listener: (context, state) {
         if (state is AddComparesSuccessState) {
           showToast(message: state.message, toastStates: ToastStates.SUCCESS);
         }
@@ -28,6 +29,7 @@ class CartPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        MainCubit.get(context).getCouponModelIfExist();
         return KeepAliveWidget(
           child: BuildCondition(
             condition: MainCubit.get(context).userSigned,
@@ -41,17 +43,17 @@ class CartPage extends StatelessWidget {
                         .cartMap
                         .map(
                           (key, value) => MapEntry(
-                        key,
-                        Column(
-                          children: [
-                            SingleCartItem(
-                              cartItem: value,
+                            key,
+                            Column(
+                              children: [
+                                SingleCartItem(
+                                  cartItem: value,
+                                ),
+                                myDivider(context),
+                              ],
                             ),
-                            myDivider(context),
-                          ],
-                        ),
-                      ),
-                    )
+                          ),
+                        )
                         .values
                         .toList(),
                     Padding(
@@ -62,40 +64,73 @@ class CartPage extends StatelessWidget {
                           Text(
                             appTranslation(context).coupon,
                             style:
-                            Theme.of(context).textTheme.bodyText1!.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                           ),
                           space20Vertical,
-                          TextFormField(
-                            style: Theme.of(context).textTheme.bodyText1,
-                            controller: MainCubit.get(context).couponEditingController,
-                            decoration: InputDecoration(
-                              suffixIcon: state is! ApplyCouponLoading ? MaterialButton(
-                                height: 60.0,
-                                onPressed: () {
-                                  MainCubit.get(context).applyCoupon(
-                                    coupon: MainCubit.get(context).couponEditingController.text,
-                                  );
-                                },
-                                child: Text(
-                                  appTranslation(context).apply,
-                                  style: Theme.of(context).textTheme.subtitle1,
+                          Form(
+                            key: formKey,
+                            child: TextFormField(
+                              style: Theme.of(context).textTheme.bodyText1,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return appTranslation(context).couponEmpty;
+                                }
+                              },
+                              controller: MainCubit.get(context)
+                                  .couponEditingController,
+                              decoration: InputDecoration(
+                                suffixIcon: state is! ApplyCouponLoading
+                                    ? MaterialButton(
+                                        height: 60.0,
+                                        onPressed: () {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            if (MainCubit.get(context)
+                                                    .couponsModel ==
+                                                null) {
+                                              MainCubit.get(context)
+                                                  .applyCoupon(
+                                                coupon: MainCubit.get(context)
+                                                    .couponEditingController
+                                                    .text,
+                                              );
+                                            } else {
+                                              showToast(
+                                                message: appTranslation(context)
+                                                    .couponSentBefore,
+                                                toastStates: ToastStates.ERROR,
+                                              );
+                                            }
+                                          }
+                                        },
+                                        child: Text(
+                                          appTranslation(context).apply,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle1,
+                                        ),
+                                      )
+                                    : const CupertinoActivityIndicator(),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: HexColor(grey),
+                                  ),
                                 ),
-                              ) : const CupertinoActivityIndicator(),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: HexColor(grey),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: HexColor(grey),
+                                  ),
                                 ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: HexColor(grey),
-                                ),
-                              ),
-                              hintText: appTranslation(context).enter_coupon_code,
-                              hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                color: HexColor(grey),
+                                hintText:
+                                    appTranslation(context).enter_coupon_code,
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      color: HexColor(grey),
+                                    ),
                               ),
                             ),
                           ),
@@ -115,8 +150,8 @@ class CartPage extends StatelessWidget {
                                     .textTheme
                                     .bodyText1!
                                     .copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                      fontWeight: FontWeight.w700,
+                                    ),
                               ),
                               const Spacer(),
                               Text(
@@ -125,43 +160,47 @@ class CartPage extends StatelessWidget {
                                     .textTheme
                                     .headline6!
                                     .copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor(secondaryVariantDark),
-                                ),
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor(secondaryVariantDark),
+                                    ),
                               ),
                             ],
                           ),
-                          if(MainCubit.get(context).couponsModel != null && MainCubit.get(context).couponsModel!.data != null)
+                          if (MainCubit.get(context).couponsModel != null &&
+                              MainCubit.get(context).couponsModel!.data != null)
                             space10Vertical,
-                          if(MainCubit.get(context).couponsModel != null && MainCubit.get(context).couponsModel!.data != null)
+                          if (MainCubit.get(context).couponsModel != null &&
+                              MainCubit.get(context).couponsModel!.data != null)
                             Row(
-                            children: [
-                              Text(
-                                appTranslation(context).coupon,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: secondaryVariant,
+                              children: [
+                                Text(
+                                  appTranslation(context).coupon,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: secondaryVariant,
+                                      ),
                                 ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                '- ${MainCubit.get(context).couponsModel!.data!.coupon.amount}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor(red),
+                                const Spacer(),
+                                Text(
+                                  '- ${MainCubit.get(context).couponsModel!.data!.coupon.amount}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor(red),
+                                      ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          if(MainCubit.get(context).couponsModel != null && MainCubit.get(context).couponsModel!.data != null)
+                              ],
+                            ),
+                          if (MainCubit.get(context).couponsModel != null &&
+                              MainCubit.get(context).couponsModel!.data != null)
                             space10Vertical,
-                          if(MainCubit.get(context).couponsModel != null && MainCubit.get(context).couponsModel!.data != null)
+                          if (MainCubit.get(context).couponsModel != null &&
+                              MainCubit.get(context).couponsModel!.data != null)
                             Row(
                               children: [
                                 Text(
@@ -170,8 +209,8 @@ class CartPage extends StatelessWidget {
                                       .textTheme
                                       .headline6!
                                       .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                 ),
                                 const Spacer(),
                                 Text(
@@ -180,22 +219,23 @@ class CartPage extends StatelessWidget {
                                       .textTheme
                                       .headline6!
                                       .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor(mainColor),
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor(mainColor),
+                                      ),
                                 ),
                               ],
                             ),
                           space20Vertical,
                           MyButton(
                             voidCallback: () {
-                              if(MainCubit.get(context).userSigned){
+                              if (MainCubit.get(context).userSigned) {
                                 navigateTo(context, const CheckoutPage());
-                              }else{
+                              } else {
                                 navigateTo(context, LoginPage());
-                                showToast(message: appTranslation(context).signFirst, toastStates: ToastStates.SUCCESS);
+                                showToast(
+                                    message: appTranslation(context).signFirst,
+                                    toastStates: ToastStates.SUCCESS);
                               }
-
                             },
                             text: appTranslation(context).proceedCheckout,
                             color: HexColor(mainColor),
@@ -206,8 +246,8 @@ class CartPage extends StatelessWidget {
                   ],
                 ),
               ),
-              fallback: (context) =>
-                  EmptyWidget(text: appTranslation(context).add_some_products_to_cart),
+              fallback: (context) => EmptyWidget(
+                  text: appTranslation(context).add_some_products_to_cart),
             ),
             fallback: (context) => Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -162,6 +162,8 @@
   "specialMarkerEmpty": "ادخل علامة مميزة",
   "personalInformation": "معلوماتك الشخصيه",
   "yourComment": "اضف تعليقا بخصوص طلبك (اختياري)",
+  "couponEmpty": "يجب ادخال كود الخصم اولا!",
+  "couponSentBefore": "لقد قمت بادخال كود الخصم من قبل"
   "overWeightTax": "ضربية الوزن الزائد "
   "vendorTax": "ضربية التحصيل  "
 }

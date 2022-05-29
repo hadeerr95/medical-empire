@@ -1,8 +1,4 @@
-import 'package:medical_empire_app/core/network/end_points.dart';
-import 'package:medical_empire_app/core/util/constants.dart';
-import 'package:medical_empire_app/core/util/language_model.dart';
-
-class CouponsModel{
+class CouponsModel {
   CouponsDataModel? data;
   final int status;
   final String message;
@@ -15,10 +11,19 @@ class CouponsModel{
 
   factory CouponsModel.fromJson(Map<String, dynamic> json) {
     return CouponsModel(
-      data: json['data'] != null ? CouponsDataModel.fromJson(json['data']) : null,
+      data:
+          json['data'] != null ? CouponsDataModel.fromJson(json['data']) : null,
       status: (json['status'] as num).toInt(),
-      message: json['message']??'',
+      message: json['message'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'data': data!.toJson(),
+      'status': status,
+      'message': message,
+    };
   }
 }
 
@@ -33,6 +38,12 @@ class CouponsDataModel {
     if (json['coupon'] != null) {
       coupon = CouponDataModel.fromJson(json['coupon']);
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'coupon': coupon,
+    };
   }
 }
 
@@ -62,15 +73,15 @@ class CouponDataModel {
   late final num amount;
 
   CouponDataModel.fromJson(Map<String, dynamic> json) {
-    id = json['id']??0;
-    name = json['name']??'';
-    type = json['type']??'';
-    desc = json['desc']??'';
-    allowFreeShipping = json['allow_free_shipping']??'';
-    startDate = json['start_date']??'';
-    endDate = json['end_date']??'';
-    minimumAmount = json['minimum_amount']??0;
-    maximumAmount = json['maximum_amount']??0;
-    amount = json['amount']??0;
+    id = json['id'] ?? 0;
+    name = json['name'] ?? '';
+    type = json['type'] ?? '';
+    desc = json['desc'] ?? '';
+    allowFreeShipping = json['allow_free_shipping'] ?? '';
+    startDate = json['start_date'] ?? '';
+    endDate = json['end_date'] ?? '';
+    minimumAmount = json['minimum_amount'] ?? 0;
+    maximumAmount = json['maximum_amount'] ?? 0;
+    amount = json['amount'] ?? 0;
   }
 }

@@ -164,6 +164,7 @@
   "personalInformation": "Your Personal Information",
   "yourComment": "Add Your Comment (optional)",
   "overWeightTax": "Over Weight Tax",
-  "vendorTax": "Vendor Tax"
-
+  "vendorTax": "Vendor Tax",
+  "couponEmpty": "Enter the discount coupon first please!",
+  "couponSentBefore": "You have used the discount code before"
 }
