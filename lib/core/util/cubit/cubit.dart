@@ -1953,10 +1953,19 @@ class MainCubit extends Cubit<MainState> {
 // sum shipping  ----------------------end
 
   // calculate Final total cart
-  calculateFinalTotalCart() {
-    finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+  calculateFinalTotalCart({num? overTax}) {
+    if(overTax ==null)
+   { finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+    }
+    else
+    {
+      finalTotalCart = firstTotalCart + totalShippingPrice
+          + extraShippingPrice + overTax;
+    }
+
     if (couponsModel != null && couponsModel!.data != null) {
       finalTotalCart -= couponsModel!.data!.coupon.amount;
     }
   }
+
 }
