@@ -164,5 +164,6 @@
   "personalInformation": "Your Personal Information",
   "yourComment": "Add Your Comment (optional)",
   "overWeightTax": "Over Weight Tax",
-  "couponEmpty": "Enter coupon first please!"
+  "couponEmpty": "Enter the discount coupon first please!",
+  "couponSentBefore": "You have used the discount code before"
 }

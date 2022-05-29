@@ -86,11 +86,26 @@ class CartPage extends StatelessWidget {
                                         onPressed: () {
                                           if (formKey.currentState!
                                               .validate()) {
-                                            MainCubit.get(context).applyCoupon(
-                                              coupon: MainCubit.get(context)
-                                                  .couponEditingController
-                                                  .text,
-                                            );
+                                            if (MainCubit.get(context)
+                                                        .couponsModel !=
+                                                    null &&
+                                                MainCubit.get(context)
+                                                        .couponsModel!
+                                                        .data !=
+                                                    null) {
+                                              MainCubit.get(context)
+                                                  .applyCoupon(
+                                                coupon: MainCubit.get(context)
+                                                    .couponEditingController
+                                                    .text,
+                                              );
+                                            } else {
+                                              showToast(
+                                                message: appTranslation(context)
+                                                    .error_phone,
+                                                toastStates: ToastStates.ERROR,
+                                              );
+                                            }
                                           }
                                         },
                                         child: Text(

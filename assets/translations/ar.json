@@ -163,6 +163,8 @@
   "personalInformation": "معلوماتك الشخصيه",
   "yourComment": "اضف تعليقا بخصوص طلبك (اختياري)",
   "overWeightTax": "ضربية الوزن الزائد ",
-  "couponEmpty": "يجب ادخال كود الخصم اولا!"
+  "couponEmpty": "يجب ادخال كود الخصم اولا!",
+  "couponSentBefore": "لقد قمت بادخال كود الخصم من قبل"
+
 
 }

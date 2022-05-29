@@ -179,6 +179,7 @@ class TranslationModel {
   late String yourComment;
   late String overWeightTax;
   late String couponEmpty;
+  late String couponSentBefore;
 
   TranslationModel.fromJson(Map<String, dynamic> json) {
     overweight_price = json['overweight_price'];
@@ -368,6 +369,7 @@ class TranslationModel {
     yourComment = json['yourComment'];
     overWeightTax = json['overWeightTax'];
     couponEmpty = json['couponEmpty'];
+    couponSentBefore = json['couponSentBefore'];
   }
 
 // Map toJson() => {
