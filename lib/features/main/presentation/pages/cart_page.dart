@@ -29,6 +29,7 @@ class CartPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        MainCubit.get(context).getCouponModelIfExist();
         return KeepAliveWidget(
           child: BuildCondition(
             condition: MainCubit.get(context).userSigned,
@@ -87,12 +88,8 @@ class CartPage extends StatelessWidget {
                                           if (formKey.currentState!
                                               .validate()) {
                                             if (MainCubit.get(context)
-                                                        .couponsModel !=
-                                                    null &&
-                                                MainCubit.get(context)
-                                                        .couponsModel!
-                                                        .data !=
-                                                    null) {
+                                                    .couponsModel ==
+                                                null) {
                                               MainCubit.get(context)
                                                   .applyCoupon(
                                                 coupon: MainCubit.get(context)
@@ -102,7 +99,7 @@ class CartPage extends StatelessWidget {
                                             } else {
                                               showToast(
                                                 message: appTranslation(context)
-                                                    .error_phone,
+                                                    .couponSentBefore,
                                                 toastStates: ToastStates.ERROR,
                                               );
                                             }

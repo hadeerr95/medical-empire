@@ -1867,6 +1867,12 @@ class MainCubit extends Cubit<MainState> {
 
   CouponsModel? couponsModel;
 
+  void getCouponModelIfExist() {
+    sl<CacheHelper>().get('coupon').then((value) {
+      couponsModel = CouponsModel.fromJson(value);
+    });
+  }
+
   void applyCoupon({
     required String coupon,
   }) async {
@@ -1882,11 +1888,18 @@ class MainCubit extends Cubit<MainState> {
       if (couponsModel!.data != null) {
         firstTotalCart = subtotalCart - couponsModel!.data!.coupon.amount;
       }
-      print(
-          ' --------------------------------------------apply Coupon success');
-      emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
-          ? couponsModel!.message
-          : couponsModel!.data!.coupon.desc));
+      sl<CacheHelper>()
+          .put(
+        'coupon',
+        couponsModel!.toJson(),
+      )
+          .then((value) {
+        print(
+            ' --------------------------------------------apply Coupon success');
+        emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
+            ? couponsModel!.message
+            : couponsModel!.data!.coupon.desc));
+      });
     }).catchError((error) {
       print(error.toString());
       print(' --------------------------------------------apply Coupon error');
