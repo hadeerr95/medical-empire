@@ -37,7 +37,7 @@ class AddressItem extends StatelessWidget {
                   ),
                   space10Horizontal,
                   Text(
-                    address.street_name,
+                    address.streetName,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                   const Spacer(),
@@ -91,7 +91,7 @@ class AddressItem extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          '${address.building_number}, ${address.street_name}, ${MainCubit.get(context).addressFeedModel!.data.governorates!.singleWhere((element) => element.id == address.governate_id).cities.singleWhere((element) => element.id == address.city_id).name}, ${MainCubit.get(context).addressFeedModel!.data.governorates!.singleWhere((element) => element.id == address.governate_id).name}',
+                          '${address.buildingNumber}, ${address.streetName}, ${MainCubit.get(context).addressFeedModel!.data.governorates!.singleWhere((element) => element.id == address.governateId).cities.singleWhere((element) => element.id == address.cityId).name}, ${MainCubit.get(context).addressFeedModel!.data.governorates!.singleWhere((element) => element.id == address.governateId).name}',
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ),

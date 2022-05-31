@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:medical_empire_app/core/models/coupons_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/cubit/state.dart';
@@ -29,7 +30,6 @@ class CartPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        MainCubit.get(context).getCouponModelIfExist();
         return KeepAliveWidget(
           child: BuildCondition(
             condition: MainCubit.get(context).userSigned,
@@ -166,7 +166,66 @@ class CartPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          if (MainCubit.get(context).couponsModel != null &&
+                          FutureBuilder<CouponsModel>(
+                              future: getCouponsModel(context),
+                              builder: (context, snapshot) {
+                                return Column(
+                                  children: [
+                                    space10Vertical,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          appTranslation(context).coupon,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle1!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: secondaryVariant,
+                                              ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '- ${MainCubit.get(context).couponsModel!.data!.coupon.amount}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle1!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor(red),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                    space10Vertical,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          appTranslation(context).total,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '${appTranslation(context).egp} ${MainCubit.get(context).firstTotalCart}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor(mainColor),
+                                              ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              }),
+                          /*if (MainCubit.get(context).couponsModel != null &&
                               MainCubit.get(context).couponsModel!.data != null)
                             space10Vertical,
                           if (MainCubit.get(context).couponsModel != null &&
@@ -224,7 +283,7 @@ class CartPage extends StatelessWidget {
                                       ),
                                 ),
                               ],
-                            ),
+                            ),*/
                           space20Vertical,
                           MyButton(
                             voidCallback: () {
@@ -281,6 +340,10 @@ class CartPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<CouponsModel> getCouponsModel(BuildContext context) async {
+    return await MainCubit.get(context).getCouponModelIfExist();
   }
 
 // Widget buildNewCartItem(context) =>

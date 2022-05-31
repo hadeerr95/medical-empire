@@ -54,14 +54,14 @@ class AddressModel {
 
     if (json['shipping_addresses'] != null) {
       shippingAddresses = List.from(json['shipping_addresses']).map((e) {
-        debugPrint('shipping_addresses parsed ====> ${Addresses.fromJson(e).id}');
+        debugPrint(
+            'shipping_addresses parsed ====> ${Addresses.fromJson(e).id}');
 
         return Addresses.fromJson(e);
       }).toList();
     }
 
     debugPrint('shipping_addresses parsed ====>');
-
 
     if (json['governoraties'] != null) {
       governorates = List.from(json['governoraties'])
@@ -81,41 +81,40 @@ class AddressModel {
     }
 
     debugPrint('payment_methods parsed ====>');
-
   }
 }
 
 class Addresses {
   Addresses({
     required this.id,
-    required this.user_id,
-    required this.governate_id,
-    required this.city_id,
-    required this.street_name,
-    required this.building_number,
-    required this.special_marker,
+    required this.userId,
+    required this.governateId,
+    required this.cityId,
+    required this.streetName,
+    required this.buildingNumber,
+    required this.specialMarker,
     required this.shippingAddressGovernmentModel,
     required this.shippingAddressCitiesModel,
   });
 
   late final int id;
-  late final int user_id;
-  late final int governate_id;
-  late final int city_id;
-  late final String street_name;
-  late final String building_number;
-  late final String special_marker;
+  late final int userId;
+  late final int governateId;
+  late final int cityId;
+  late final String streetName;
+  late final String buildingNumber;
+  late final String specialMarker;
   late final ShippingAddressGovernmentModel shippingAddressGovernmentModel;
   late final ShippingAddressCitiesModel shippingAddressCitiesModel;
 
   Addresses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user_id = json['user_id'] ?? 0;
-    governate_id = json['governate_id'] ?? 0;
-    city_id = json['city_id'] ?? 0;
-    street_name = json['street_name'];
-    building_number = json['building_number'];
-    special_marker = json['special_marker'];
+    userId = json['user_id'] ?? 0;
+    governateId = json['governate_id'] ?? 0;
+    cityId = json['city_id'] ?? 0;
+    streetName = json['street_name'];
+    buildingNumber = json['building_number'];
+    specialMarker = json['special_marker'];
     print('building_number parsed ---------------------');
 
     if (json['governorate'] != null) {
@@ -134,11 +133,11 @@ class Addresses {
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
-    _data['user_id'] = user_id;
-    _data['governate_id'] = governate_id;
-    _data['city_id'] = city_id;
-    _data['street_name'] = street_name;
-    _data['building_number'] = building_number;
+    _data['user_id'] = userId;
+    _data['governate_id'] = governateId;
+    _data['city_id'] = cityId;
+    _data['street_name'] = streetName;
+    _data['building_number'] = buildingNumber;
     _data['governorate'] = shippingAddressGovernmentModel;
     _data['city'] = shippingAddressCitiesModel;
 
@@ -227,7 +226,7 @@ class ShippingAddressCitiesModel {
     name = json['name'];
     name_ar = json['name_ar'];
     governorate_id = json['governorate_id'];
-    if(json['shipping_price'] != null) {
+    if (json['shipping_price'] != null) {
       shipping_price = json['shipping_price']['price'];
     } else {
       shipping_price = 0;
