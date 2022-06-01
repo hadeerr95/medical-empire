@@ -42,7 +42,7 @@ class CouponsDataModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'coupon': coupon,
+      'coupon': coupon.toJson(),
     };
   }
 }
@@ -83,5 +83,20 @@ class CouponDataModel {
     minimumAmount = json['minimum_amount'] ?? 0;
     maximumAmount = json['maximum_amount'] ?? 0;
     amount = json['amount'] ?? 0;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'desc': desc,
+      'allow_free_shipping': allowFreeShipping,
+      'start_date': startDate,
+      'end_date': endDate,
+      'minimum_amount': minimumAmount,
+      'maximum_amount': maximumAmount,
+      'amount': amount,
+    };
   }
 }

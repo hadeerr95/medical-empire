@@ -54,7 +54,8 @@ class AddressModel {
 
     if (json['shipping_addresses'] != null) {
       shippingAddresses = List.from(json['shipping_addresses']).map((e) {
-        debugPrint('shipping_addresses parsed ====> ${Addresses.fromJson(e).id}');
+        debugPrint(
+            'shipping_addresses parsed ====> ${Addresses.fromJson(e).id}');
 
         return Addresses.fromJson(e);
       }).toList();
@@ -62,11 +63,17 @@ class AddressModel {
 
     debugPrint('shipping_addresses parsed ====>');
 
-
+    /* if (json['governorates'] != null) {
+      governorates = List.from(json['governorates'])
+          .map((e) => GovernmentModel.fromJson(e))
+          .toList();
+      debugPrint('governorate parsed ---------------------');
+    } else */
     if (json['governoraties'] != null) {
       governorates = List.from(json['governoraties'])
           .map((e) => GovernmentModel.fromJson(e))
           .toList();
+      debugPrint('governorate parsed ---------------------');
     }
 
     if (json['payment_methods'] != null) {
@@ -81,41 +88,40 @@ class AddressModel {
     }
 
     debugPrint('payment_methods parsed ====>');
-
   }
 }
 
 class Addresses {
   Addresses({
     required this.id,
-    required this.user_id,
-    required this.governate_id,
-    required this.city_id,
-    required this.street_name,
-    required this.building_number,
-    required this.special_marker,
+    required this.userId,
+    required this.governateId,
+    required this.cityId,
+    required this.streetName,
+    required this.buildingNumber,
+    required this.specialMarker,
     required this.shippingAddressGovernmentModel,
     required this.shippingAddressCitiesModel,
   });
 
   late final int id;
-  late final int user_id;
-  late final int governate_id;
-  late final int city_id;
-  late final String street_name;
-  late final String building_number;
-  late final String special_marker;
+  late final int userId;
+  late final int governateId;
+  late final int cityId;
+  late final String streetName;
+  late final String buildingNumber;
+  late final String specialMarker;
   late final ShippingAddressGovernmentModel shippingAddressGovernmentModel;
   late final ShippingAddressCitiesModel shippingAddressCitiesModel;
 
   Addresses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user_id = json['user_id'] ?? 0;
-    governate_id = json['governate_id'] ?? 0;
-    city_id = json['city_id'] ?? 0;
-    street_name = json['street_name'];
-    building_number = json['building_number'];
-    special_marker = json['special_marker'];
+    userId = json['user_id'] ?? 0;
+    governateId = json['governate_id'] ?? 0;
+    cityId = json['city_id'] ?? 0;
+    streetName = json['street_name'];
+    buildingNumber = json['building_number'];
+    specialMarker = json['special_marker'];
     print('building_number parsed ---------------------');
 
     if (json['governorate'] != null) {
@@ -134,11 +140,11 @@ class Addresses {
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
-    _data['user_id'] = user_id;
-    _data['governate_id'] = governate_id;
-    _data['city_id'] = city_id;
-    _data['street_name'] = street_name;
-    _data['building_number'] = building_number;
+    _data['user_id'] = userId;
+    _data['governate_id'] = governateId;
+    _data['city_id'] = cityId;
+    _data['street_name'] = streetName;
+    _data['building_number'] = buildingNumber;
     _data['governorate'] = shippingAddressGovernmentModel;
     _data['city'] = shippingAddressCitiesModel;
 
@@ -176,23 +182,23 @@ class ShippingAddressGovernmentModel {
   ShippingAddressGovernmentModel({
     required this.id,
     required this.name,
-    required this.name_ar,
-    required this.country_id,
-    required this.governorate_shipping_price,
+    required this.nameAr,
+    required this.countryId,
+    required this.governorateShippingPrice,
   });
 
   late final int id;
   late final String name;
-  late final String name_ar;
-  late final int country_id;
-  late final GovernmentShippingPriceModel governorate_shipping_price;
+  late final String nameAr;
+  late final int countryId;
+  late final GovernmentShippingPriceModel governorateShippingPrice;
 
   ShippingAddressGovernmentModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    name_ar = json['name_ar'];
-    country_id = json['country_id'];
-    governorate_shipping_price = GovernmentShippingPriceModel.fromJson(
+    nameAr = json['name_ar'];
+    countryId = json['country_id'];
+    governorateShippingPrice = GovernmentShippingPriceModel.fromJson(
         json['governorate_shipping_price']);
   }
 
@@ -200,9 +206,9 @@ class ShippingAddressGovernmentModel {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['name'] = name;
-    _data['name_ar'] = name_ar;
-    _data['country_id'] = country_id;
-    _data['governorate_shipping_price'] = governorate_shipping_price.toJson();
+    _data['name_ar'] = nameAr;
+    _data['country_id'] = countryId;
+    _data['governorate_shipping_price'] = governorateShippingPrice.toJson();
     return _data;
   }
 }
@@ -227,7 +233,7 @@ class ShippingAddressCitiesModel {
     name = json['name'];
     name_ar = json['name_ar'];
     governorate_id = json['governorate_id'];
-    if(json['shipping_price'] != null) {
+    if (json['shipping_price'] != null) {
       shipping_price = json['shipping_price']['price'];
     } else {
       shipping_price = 0;
@@ -250,24 +256,24 @@ class GovernmentModel {
   GovernmentModel({
     required this.id,
     required this.name,
-    required this.name_ar,
-    required this.country_id,
+    required this.nameAr,
+    required this.countryId,
     required this.cities,
     required this.governmentShippingPriceModel,
   });
 
   late final int id;
   late final String name;
-  late final String name_ar;
-  late final int country_id;
+  late final String nameAr;
+  late final int countryId;
   late final List<CitiesModel> cities;
   late final GovernmentShippingPriceModel governmentShippingPriceModel;
 
   GovernmentModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    name_ar = json['name_ar'];
-    country_id = json['country_id'];
+    nameAr = json['name_ar'];
+    countryId = json['country_id'];
 
     if (json['cities'] != null) {
       cities = List.from(json['cities'])
@@ -284,8 +290,8 @@ class GovernmentModel {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['name'] = name;
-    _data['name_ar'] = name_ar;
-    _data['country_id'] = country_id;
+    _data['name_ar'] = nameAr;
+    _data['country_id'] = countryId;
     _data['governorate_shipping_price'] = governmentShippingPriceModel;
     return _data;
   }
@@ -295,32 +301,49 @@ class CitiesModel {
   CitiesModel({
     required this.id,
     required this.name,
-    required this.name_ar,
-    required this.governorate_id,
-    required this.shipping_price,
+    required this.nameAr,
+    required this.governorateId,
+    required this.shippingPrice,
   });
 
   late final int id;
   late final String name;
-  late final String name_ar;
-  late final int governorate_id;
-  late final int shipping_price;
+  late final String nameAr;
+  late final int governorateId;
+  late final ShippingPrice? shippingPrice;
 
   CitiesModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    name_ar = json['name_ar'];
-    governorate_id = json['governorate_id'];
-    shipping_price = json['shipping_price'] ?? 0;
+    nameAr = json['name_ar'];
+    governorateId = json['governorate_id'];
+    if (json['shipping_price'] != null) {
+      shippingPrice = ShippingPrice.fromJson(json['shipping_price']);
+    }
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['name'] = name;
-    _data['name_ar'] = name_ar;
-    _data['governorate_id'] = governorate_id;
-    _data['shipping_price'] = shipping_price;
+    _data['name_ar'] = nameAr;
+    _data['governorate_id'] = governorateId;
+    _data['shipping_price'] = shippingPrice!.toJson();
+    return _data;
+  }
+}
+
+class ShippingPrice {
+  late int? id;
+  late int? price;
+  ShippingPrice.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    price = json['price'];
+  }
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id ?? 0;
+    _data['price'] = price ?? 0;
     return _data;
   }
 }
@@ -328,36 +351,36 @@ class CitiesModel {
 class GovernmentShippingPriceModel {
   GovernmentShippingPriceModel({
     required this.id,
-    required this.governorate_from,
-    required this.governorate_to,
-    required this.city_from,
-    required this.city_to,
+    required this.governorateFrom,
+    required this.governorateTo,
+    required this.cityFrom,
+    required this.cityTo,
     required this.price,
   });
 
   late final int id;
-  late final int governorate_from;
-  late final int governorate_to;
-  late final int city_from;
-  late final int city_to;
+  late final int governorateFrom;
+  late final int governorateTo;
+  late final int cityFrom;
+  late final int cityTo;
   late final int price;
 
   GovernmentShippingPriceModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    governorate_from = json['governorate_from'] ?? 0;
-    governorate_to = json['governorate_to'] ?? 0;
-    city_from = json['city_from'] ?? 0;
-    city_to = json['city_to'] ?? 0;
+    governorateFrom = json['governorate_from'] ?? 0;
+    governorateTo = json['governorate_to'] ?? 0;
+    cityFrom = json['city_from'] ?? 0;
+    cityTo = json['city_to'] ?? 0;
     price = json['price'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
-    _data['governorate_from'] = governorate_from;
-    _data['governorate_to'] = governorate_to;
-    _data['city_from'] = city_from;
-    _data['city_to'] = city_to;
+    _data['governorate_from'] = governorateFrom;
+    _data['governorate_to'] = governorateTo;
+    _data['city_from'] = cityFrom;
+    _data['city_to'] = cityTo;
     _data['price'] = price;
     return _data;
   }

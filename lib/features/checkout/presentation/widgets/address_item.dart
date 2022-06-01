@@ -52,7 +52,7 @@ class AddressItem extends StatelessWidget {
                 space15Horizontal,
                 Expanded(
                   child: Text(
-                    '${shippingAddressModel.building_number}, ${shippingAddressModel.street_name}, ${shippingAddressModel.shippingAddressCitiesModel.name}, ${shippingAddressModel.shippingAddressGovernmentModel.name}',
+                    '${shippingAddressModel.buildingNumber}, ${shippingAddressModel.streetName}, ${shippingAddressModel.shippingAddressCitiesModel.name}, ${shippingAddressModel.shippingAddressGovernmentModel.name}',
                     maxLines: 2,
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(
                           color: HexColor(secondaryVariantDark),

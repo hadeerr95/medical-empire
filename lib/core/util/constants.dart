@@ -214,7 +214,6 @@ void showToast({
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
         backgroundColor: choseToastColor(toastStates),
-        webBgColor: choseToastColor(toastStates),
         textColor: Colors.white,
         fontSize: 16.0);
 

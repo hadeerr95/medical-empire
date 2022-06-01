@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:medical_empire_app/core/models/cart_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/cubit/state.dart';
@@ -53,35 +52,47 @@ class CashSection extends StatelessWidget {
             ),
             cashForWeight(context),
             cashForVendor(context),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15.0,
-                vertical: 13.0,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    appTranslation(context).shipping,
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: HexColor(secondaryVariantDark),
-                          fontWeight: FontWeight.w400,
+            MainCubit.get(context).totalShippingPrice != 0
+                ? Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                          vertical: 13.0,
                         ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '+ ${MainCubit.get(context).totalShippingPrice} ${appTranslation(context).egp}',
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: HexColor(secondaryVariantDark),
-                          fontWeight: FontWeight.w400,
+                        child: Row(
+                          children: [
+                            Text(
+                              appTranslation(context).shipping,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1!
+                                  .copyWith(
+                                    color: HexColor(secondaryVariantDark),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '+ ${MainCubit.get(context).totalShippingPrice} ${appTranslation(context).egp}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1!
+                                  .copyWith(
+                                    color: HexColor(secondaryVariantDark),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                            ),
+                          ],
                         ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 1.0,
-              color: Theme.of(context).scaffoldBackgroundColor,
-            ),
+                      ),
+                      Container(
+                        height: 1.0,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                    ],
+                  )
+                : Container(),
             if (MainCubit.get(context).couponsModel != null &&
                 MainCubit.get(context).couponsModel!.data != null)
               Padding(
@@ -150,48 +161,48 @@ class CashSection extends StatelessWidget {
     num overWeightTax = 0;
 
     MainCubit.get(context).cartMap.forEach((key, item) {
-      if(item.weight !=null && num.parse(item.weight!) > 1000){
-        num overWeight = (num.parse(item.weight!) - 1000) / 1000 * 5 ;
+      if (item.weight != null && num.parse(item.weight!) > 1000) {
+        num overWeight = (num.parse(item.weight!) - 1000) / 1000 * 5;
         overWeightTax += overWeight;
       }
     });
-    if(overWeightTax > 0) {
+    if (overWeightTax > 0) {
       MainCubit.get(context).calculateFinalTotalCart(overTax: overWeightTax);
       return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15.0,
-            vertical: 13.0,
-          ),
-          child: Row(
-            children: [
-              Text(
-                appTranslation(context).overWeightTax,
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                  color: HexColor(secondaryVariantDark),
-                  fontWeight: FontWeight.w400,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 13.0,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  appTranslation(context).overWeightTax,
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        color: HexColor(secondaryVariantDark),
+                        fontWeight: FontWeight.w400,
+                      ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                '$overWeightTax ${appTranslation(context).egp}',
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                  color: HexColor(secondaryVariantDark),
-                  fontWeight: FontWeight.w400,
+                const Spacer(),
+                Text(
+                  '$overWeightTax ${appTranslation(context).egp}',
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        color: HexColor(secondaryVariantDark),
+                        fontWeight: FontWeight.w400,
+                      ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Container(
-          height: 1.0,
-          color: Theme.of(context).scaffoldBackgroundColor,
-        ),
-      ],
-    );
+          Container(
+            height: 1.0,
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+        ],
+      );
     } else {
-      return  const SizedBox();
+      return const SizedBox();
     }
   }
 
@@ -199,14 +210,13 @@ class CashSection extends StatelessWidget {
     int firstVendorId = 0;
     num vendorTax = 0;
     MainCubit.get(context).cartMap.forEach((key, item) {
-      if(firstVendorId == 0 ){
+      if (firstVendorId == 0) {
         firstVendorId = item.vendorId;
-      }
-      else if (firstVendorId != item.vendorId){
-        vendorTax+=10;
+      } else if (firstVendorId != item.vendorId) {
+        vendorTax += 10;
       }
     });
-    if(vendorTax > 0) {
+    if (vendorTax > 0) {
       MainCubit.get(context).calculateFinalTotalCart(overTax: vendorTax);
       return Column(
         children: [
@@ -220,17 +230,17 @@ class CashSection extends StatelessWidget {
                 Text(
                   appTranslation(context).vendorTax,
                   style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    color: HexColor(secondaryVariantDark),
-                    fontWeight: FontWeight.w400,
-                  ),
+                        color: HexColor(secondaryVariantDark),
+                        fontWeight: FontWeight.w400,
+                      ),
                 ),
                 const Spacer(),
                 Text(
                   '$vendorTax ${appTranslation(context).egp}',
                   style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    color: HexColor(secondaryVariantDark),
-                    fontWeight: FontWeight.w400,
-                  ),
+                        color: HexColor(secondaryVariantDark),
+                        fontWeight: FontWeight.w400,
+                      ),
                 ),
               ],
             ),
@@ -242,7 +252,7 @@ class CashSection extends StatelessWidget {
         ],
       );
     } else {
-      return  const SizedBox();
+      return const SizedBox();
     }
   }
 }

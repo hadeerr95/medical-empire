@@ -808,6 +808,7 @@ class MainCubit extends Cubit<MainState> {
     } else {
       firstTotalCart = subtotalCart;
     }
+    print("===========================$firstTotalCart");
 
     emit(CartSubTotal());
   }
@@ -993,6 +994,7 @@ class MainCubit extends Cubit<MainState> {
   void selectGovernment(GovernmentModel model) {
     selectedGovernment = model;
     selectedCity = selectedGovernment!.cities[0];
+    sumShipping(governorateID: model.id);
     emit(SelectedGovernmentState());
   }
 
@@ -1034,7 +1036,9 @@ class MainCubit extends Cubit<MainState> {
     )
         .then((value) {
       SimpleModel model = SimpleModel.fromJson(value.data);
-      emit(AddAddressSuccessState(model.message!));
+      if (model.message != null) {
+        emit(AddAddressSuccessState(model.message!));
+      }
       getMyAddress();
     }).catchError((error) {
       print('Add Address Error------------------------');
@@ -1263,7 +1267,9 @@ class MainCubit extends Cubit<MainState> {
     )
         .then((value) {
       SimpleModel model = SimpleModel.fromJson(value.data);
-      emit(UpdateAccountSuccessState(model.message!));
+      if (model.message != null) {
+        emit(UpdateAccountSuccessState(model.message!));
+      }
       getAccount();
       print('----------------update Account------------------ Success');
     }).catchError((error) {
@@ -1813,13 +1819,13 @@ class MainCubit extends Cubit<MainState> {
           .shippingAddressCitiesModel.id
           .toString(),
       buildingNumber: checkoutModel!
-          .data.shippingAddresses![shippingAddressIndex].building_number,
+          .data.shippingAddresses![shippingAddressIndex].buildingNumber,
       streetName: checkoutModel!
-          .data.shippingAddresses![shippingAddressIndex].street_name,
+          .data.shippingAddresses![shippingAddressIndex].streetName,
       phone: checkoutModel!.data.user.phone,
       email: checkoutModel!.data.user.email,
       specialMarker: checkoutModel!
-          .data.shippingAddresses![shippingAddressIndex].special_marker,
+          .data.shippingAddresses![shippingAddressIndex].specialMarker,
       government: checkoutModel!.data.shippingAddresses![shippingAddressIndex]
           .shippingAddressGovernmentModel.id
           .toString(),
@@ -1867,10 +1873,12 @@ class MainCubit extends Cubit<MainState> {
 
   CouponsModel? couponsModel;
 
-  void getCouponModelIfExist() {
-    sl<CacheHelper>().get('coupon').then((value) {
-      couponsModel = CouponsModel.fromJson(value);
-    });
+  getCouponModelIfExist() async {
+    var couponJson = await sl<CacheHelper>().get('coupon');
+    if (couponJson != null) {
+      couponsModel = CouponsModel.fromJson(couponJson);
+    }
+    return couponsModel;
   }
 
   void applyCoupon({
@@ -1885,25 +1893,28 @@ class MainCubit extends Cubit<MainState> {
       print('done');
       couponsModel = CouponsModel.fromJson(value.data);
 
-      if (couponsModel!.data != null) {
+      if (value.data["data"] == null) {
+        emit(ApplyCouponError(value.data["message"].toString()));
+      } else if (couponsModel!.data != null) {
         firstTotalCart = subtotalCart - couponsModel!.data!.coupon.amount;
+
+        sl<CacheHelper>()
+            .put(
+          'coupon',
+          couponsModel!.toJson(),
+        )
+            .then((value) {
+          print(
+              ' --------------------------------------------apply Coupon success');
+          emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
+              ? couponsModel!.message
+              : couponsModel!.data!.coupon.desc));
+        });
       }
-      sl<CacheHelper>()
-          .put(
-        'coupon',
-        couponsModel!.toJson(),
-      )
-          .then((value) {
-        print(
-            ' --------------------------------------------apply Coupon success');
-        emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
-            ? couponsModel!.message
-            : couponsModel!.data!.coupon.desc));
-      });
     }).catchError((error) {
       print(error.toString());
       print(' --------------------------------------------apply Coupon error');
-      emit(Error());
+      emit(ApplyCouponError(error.toString()));
     });
   }
 
@@ -1914,71 +1925,84 @@ class MainCubit extends Cubit<MainState> {
   int totalShippingPrice = 0;
   int extraShippingPrice = 0;
 
-  void sumShipping() {
-    int cityShippingPrice = checkoutModel!
-        .data
-        .shippingAddresses![shippingAddressIndex]
-        .shippingAddressCitiesModel
-        .shipping_price!;
-
-    if (cityShippingPrice == 0) {
-      totalShippingPrice = checkoutModel!
+  void sumShipping({int governorateID = 0}) {
+    if (checkoutModel!.data.shippingAddresses!.isEmpty) {
+      for (var governorate in checkoutModel!.data.governorates!) {
+        if (governorate.id == governorateID) {
+          totalShippingPrice = governorate.governmentShippingPriceModel.price;
+        }
+      }
+    } else {
+      int cityShippingPrice = checkoutModel!
           .data
           .shippingAddresses![shippingAddressIndex]
-          .shippingAddressGovernmentModel
-          .governorate_shipping_price
-          .price;
-    } else {
-      totalShippingPrice = cityShippingPrice;
-    }
+          .shippingAddressCitiesModel
+          .shipping_price!;
 
-    // int governmentId = checkoutModel!.data.shippingAddresses[shippingAddressIndex].governate_id;
-    // int cityId = checkoutModel!.data.shippingAddresses[shippingAddressIndex].city_id;
-    //
-    // int cityShippingPrice = checkoutModel!.data.governorates.singleWhere((element) => element.id == governmentId).cities.singleWhere((element) => element.id == cityId).shipping_price;
-    //
-    // if(cityShippingPrice == 0) {
-    //   totalShippingPrice = checkoutModel!.data.governorates.singleWhere((element) => element.id == governmentId).governmentShippingPriceModel.price;
-    // } else {
-    //   totalShippingPrice = cityShippingPrice;
-    // }
-
-    int i = cartMap.values.toList()[0].vendorId;
-
-    cartMap.values.toList().forEach((element) {
-      if (element.vendorId != i) {
-        extraShippingPrice += 10;
+      if (cityShippingPrice == 0) {
+        totalShippingPrice = checkoutModel!
+            .data
+            .shippingAddresses![shippingAddressIndex]
+            .shippingAddressGovernmentModel
+            .governorateShippingPrice
+            .price;
+        // in case user not have any shipping addresses
+      } else {
+        totalShippingPrice = cityShippingPrice;
       }
 
-      print(element.vendorId);
-    });
+      // int governmentId = checkoutModel!.data.shippingAddresses[shippingAddressIndex].governate_id;
+      // int cityId = checkoutModel!.data.shippingAddresses[shippingAddressIndex].city_id;
+      //
+      // int cityShippingPrice = checkoutModel!.data.governorates.singleWhere((element) => element.id == governmentId).cities.singleWhere((element) => element.id == cityId).shipping_price;
+      //
+      // if(cityShippingPrice == 0) {
+      //   totalShippingPrice = checkoutModel!.data.governorates.singleWhere((element) => element.id == governmentId).governmentShippingPriceModel.price;
+      // } else {
+      //   totalShippingPrice = cityShippingPrice;
+      // }
 
-    print(extraShippingPrice);
-    print(totalShippingPrice);
+      int i = cartMap.values.toList()[0].vendorId;
 
-    finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+      cartMap.values.toList().forEach((element) {
+        if (element.vendorId != i) {
+          extraShippingPrice += 10;
+        }
 
-    // cartMap.values.toList().forEach((element) {
-    //   element.vendorId
-    // });
+        print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
+      });
+
+      finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+
+      print(">>>>>>>>>>>>>>>>>>>>$extraShippingPrice");
+      print(">>>>>>>>>>>>>>>>>>>>$totalShippingPrice");
+      print(">>>>>>>>>>>>>>>>>>>>$firstTotalCart");
+      print(">>>>>>>>>>>>>>>>>>>>$finalTotalCart");
+
+      // cartMap.values.toList().forEach((element) {
+      //   element.vendorId
+      // });
+    }
   }
 
 // sum shipping  ----------------------end
 
   // calculate Final total cart
   calculateFinalTotalCart({num? overTax}) {
-    if(overTax ==null)
-   { finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
-    }
-    else
-    {
-      finalTotalCart = firstTotalCart + totalShippingPrice
-          + extraShippingPrice + overTax;
+    if (overTax == null) {
+      finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+    } else {
+      finalTotalCart =
+          firstTotalCart + totalShippingPrice + extraShippingPrice + overTax;
     }
 
-    if (couponsModel != null && couponsModel!.data != null) {
-      finalTotalCart -= couponsModel!.data!.coupon.amount;
-    }
+    // if (couponsModel != null && couponsModel!.data != null) {
+    //   finalTotalCart -= couponsModel!.data!.coupon.amount;
+    // }
+
+    print("<<<<<<<<<<<<<<<<<<<$extraShippingPrice");
+    print("<<<<<<<<<<<<<<<<<<<$finalTotalCart");
+    print("<<<<<<<<<<<<<<<<<<<$totalShippingPrice");
+    print("<<<<<<<<<<<<<<<<<<<$firstTotalCart");
   }
-
 }
