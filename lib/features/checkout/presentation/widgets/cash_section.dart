@@ -148,6 +148,7 @@ class CashSection extends StatelessWidget {
 
   Widget cashForWeight(context) {
     num overWeightTax = 0;
+
     MainCubit.get(context).cartMap.forEach((key, item) {
       if(item.weight !=null && num.parse(item.weight!) > 1000){
         num overWeight = (num.parse(item.weight!) - 1000) / 1000 * 5 ;

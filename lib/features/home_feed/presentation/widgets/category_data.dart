@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -349,7 +351,7 @@ class CategoryProductHorizontalItem extends StatelessWidget {
                   alignment: AlignmentDirectional.topStart,
                   child: Container(
                     child: Text(
-                      appTranslation(context).sale,
+                      appTranslation(context).sale +" "+ getPercentageOfDiscount(products.oldPrice! , products.price),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.caption!.copyWith(
@@ -587,5 +589,16 @@ class CategoryProductHorizontalItem extends StatelessWidget {
     //     ),
     //   ),
     // );
+  }
+
+  String getPercentageOfDiscount(String oldPrice, String price) {
+    num oldPriceNum = num.parse(oldPrice);
+    num priceNum = num.parse(price);
+    num result   = (oldPriceNum - priceNum) / oldPriceNum ;
+    return dp(result.toDouble(),2).toString()+"%";
+  }
+  double dp(double val, int places){
+    num mod = pow(10.0, places);
+    return ((val * mod).round().toDouble() / mod);
   }
 }
