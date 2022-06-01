@@ -43,7 +43,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     MainCubit.get(context).getCheckout();
     MainCubit.get(context).getMyAddress();
@@ -52,12 +51,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
     emailController.text = MainCubit.get(context).myAccountModel!.data.email;
     phoneController.text = MainCubit.get(context).myAccountModel!.data.phone;
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
     _quantitySubject.close();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return BackScaffold(
@@ -161,7 +162,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         space15Vertical,
                                         CheckoutProductItem(
                                           cartItem: value,
-                                          quantitySubject:_quantitySubject ,
+                                          quantitySubject: _quantitySubject,
                                         ),
                                       ],
                                     ),

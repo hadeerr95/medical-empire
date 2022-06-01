@@ -808,6 +808,7 @@ class MainCubit extends Cubit<MainState> {
     } else {
       firstTotalCart = subtotalCart;
     }
+    print("===========================$firstTotalCart");
 
     emit(CartSubTotal());
   }
@@ -1868,8 +1869,11 @@ class MainCubit extends Cubit<MainState> {
 
   CouponsModel? couponsModel;
 
-  getCouponModelIfExist() async{
-    couponsModel =  CouponsModel.fromJson(await sl<CacheHelper>().get('coupon'));
+  getCouponModelIfExist() async {
+    var couponJson = await sl<CacheHelper>().get('coupon');
+    if (couponJson != null) {
+      couponsModel = CouponsModel.fromJson(couponJson);
+    }
     return couponsModel;
   }
 
@@ -1933,7 +1937,7 @@ class MainCubit extends Cubit<MainState> {
             .data
             .shippingAddresses![shippingAddressIndex]
             .shippingAddressGovernmentModel
-            .governorate_shipping_price
+            .governorateShippingPrice
             .price;
         // in case user not have any shipping addresses
       } else {
@@ -1958,13 +1962,15 @@ class MainCubit extends Cubit<MainState> {
           extraShippingPrice += 10;
         }
 
-        print(element.vendorId);
+        print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
       });
 
-      print(extraShippingPrice);
-      print(totalShippingPrice);
-
       finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
+
+      print(">>>>>>>>>>>>>>>>>>>>$extraShippingPrice");
+      print(">>>>>>>>>>>>>>>>>>>>$totalShippingPrice");
+      print(">>>>>>>>>>>>>>>>>>>>$firstTotalCart");
+      print(">>>>>>>>>>>>>>>>>>>>$finalTotalCart");
 
       // cartMap.values.toList().forEach((element) {
       //   element.vendorId
@@ -1983,8 +1989,13 @@ class MainCubit extends Cubit<MainState> {
           firstTotalCart + totalShippingPrice + extraShippingPrice + overTax;
     }
 
-    if (couponsModel != null && couponsModel!.data != null) {
-      finalTotalCart -= couponsModel!.data!.coupon.amount;
-    }
+    // if (couponsModel != null && couponsModel!.data != null) {
+    //   finalTotalCart -= couponsModel!.data!.coupon.amount;
+    // }
+
+    print("<<<<<<<<<<<<<<<<<<<$extraShippingPrice");
+    print("<<<<<<<<<<<<<<<<<<<$finalTotalCart");
+    print("<<<<<<<<<<<<<<<<<<<$totalShippingPrice");
+    print("<<<<<<<<<<<<<<<<<<<$firstTotalCart");
   }
 }
