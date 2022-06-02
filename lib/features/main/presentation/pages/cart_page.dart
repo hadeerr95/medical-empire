@@ -28,6 +28,9 @@ class CartPage extends StatelessWidget {
         if (state is ApplyCouponSuccess) {
           showToast(message: state.message, toastStates: ToastStates.SUCCESS);
         }
+        if (state is ApplyCouponError) {
+          showToast(message: state.message, toastStates: ToastStates.ERROR);
+        }
       },
       builder: (context, state) {
         return KeepAliveWidget(
@@ -88,8 +91,12 @@ class CartPage extends StatelessWidget {
                                           if (formKey.currentState!
                                               .validate()) {
                                             if (MainCubit.get(context)
-                                                    .couponsModel ==
-                                                null) {
+                                                        .couponsModel ==
+                                                    null ||
+                                                MainCubit.get(context)
+                                                        .couponsModel!
+                                                        .data ==
+                                                    null) {
                                               MainCubit.get(context)
                                                   .applyCoupon(
                                                 coupon: MainCubit.get(context)
@@ -169,7 +176,8 @@ class CartPage extends StatelessWidget {
                           FutureBuilder<CouponsModel>(
                               future: getCouponsModel(context),
                               builder: (context, snapshot) {
-                                return snapshot.hasData && snapshot.data != null
+                                return snapshot.hasData &&
+                                        snapshot.data!.data != null
                                     ? Column(
                                         children: [
                                           space10Vertical,

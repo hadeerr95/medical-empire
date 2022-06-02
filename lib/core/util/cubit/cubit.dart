@@ -1036,7 +1036,9 @@ class MainCubit extends Cubit<MainState> {
     )
         .then((value) {
       SimpleModel model = SimpleModel.fromJson(value.data);
-      emit(AddAddressSuccessState(model.message!));
+      if (model.message != null) {
+        emit(AddAddressSuccessState(model.message!));
+      }
       getMyAddress();
     }).catchError((error) {
       print('Add Address Error------------------------');
@@ -1265,7 +1267,9 @@ class MainCubit extends Cubit<MainState> {
     )
         .then((value) {
       SimpleModel model = SimpleModel.fromJson(value.data);
-      emit(UpdateAccountSuccessState(model.message!));
+      if (model.message != null) {
+        emit(UpdateAccountSuccessState(model.message!));
+      }
       getAccount();
       print('----------------update Account------------------ Success');
     }).catchError((error) {
@@ -1889,25 +1893,28 @@ class MainCubit extends Cubit<MainState> {
       print('done');
       couponsModel = CouponsModel.fromJson(value.data);
 
-      if (couponsModel!.data != null) {
+      if (value.data["data"] == null) {
+        emit(ApplyCouponError(value.data["message"].toString()));
+      } else if (couponsModel!.data != null) {
         firstTotalCart = subtotalCart - couponsModel!.data!.coupon.amount;
+
+        sl<CacheHelper>()
+            .put(
+          'coupon',
+          couponsModel!.toJson(),
+        )
+            .then((value) {
+          print(
+              ' --------------------------------------------apply Coupon success');
+          emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
+              ? couponsModel!.message
+              : couponsModel!.data!.coupon.desc));
+        });
       }
-      sl<CacheHelper>()
-          .put(
-        'coupon',
-        couponsModel!.toJson(),
-      )
-          .then((value) {
-        print(
-            ' --------------------------------------------apply Coupon success');
-        emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
-            ? couponsModel!.message
-            : couponsModel!.data!.coupon.desc));
-      });
     }).catchError((error) {
       print(error.toString());
       print(' --------------------------------------------apply Coupon error');
-      emit(Error());
+      emit(ApplyCouponError(error.toString()));
     });
   }
 

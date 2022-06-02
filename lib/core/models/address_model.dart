@@ -63,12 +63,13 @@ class AddressModel {
 
     debugPrint('shipping_addresses parsed ====>');
 
-    if (json['governorates'] != null) {
+    /* if (json['governorates'] != null) {
       governorates = List.from(json['governorates'])
           .map((e) => GovernmentModel.fromJson(e))
           .toList();
       debugPrint('governorate parsed ---------------------');
-    } else if (json['governoraties'] != null) {
+    } else */
+    if (json['governoraties'] != null) {
       governorates = List.from(json['governoraties'])
           .map((e) => GovernmentModel.fromJson(e))
           .toList();

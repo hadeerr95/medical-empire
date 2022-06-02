@@ -71,7 +71,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               message: state.message,
               toastStates: ToastStates.SUCCESS,
             );
-
             MainCubit.get(context).clearCart();
           }
 
@@ -238,30 +237,35 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void saveAddress() {
+    int addresses =
+        MainCubit.get(context).checkoutModel!.data.shippingAddresses!.length;
     print(governorateController.text);
     print(cityController.text);
-    if (governorateController.text.isEmpty ||
-        governorateController.text == '') {
-      _scrollController.jumpTo(0);
-      governorateController.text =
-          MainCubit.get(context).selectedGovernment!.id.toString();
-    }
-    if (cityController.text.isEmpty || cityController.text == '') {
-      _scrollController.jumpTo(0);
-      cityController.text = MainCubit.get(context).selectedCity!.id.toString();
-    }
-    if (formKey.currentState!.validate()) {
-      MainCubit.get(context).addMyAddress(
-        buildingNumber: buildNumberAddressController.text,
-        city: int.parse(cityController.text),
-        governorate: int.parse(governorateController.text),
-        specialMarker: specialController.text,
-        streetName: streetNameController.text,
-      );
-    }
+    if (addresses == 0) {
+      if (governorateController.text.isEmpty ||
+          governorateController.text == '') {
+        _scrollController.jumpTo(0);
+        governorateController.text =
+            MainCubit.get(context).selectedGovernment!.id.toString();
+      }
+      if ((cityController.text.isEmpty || cityController.text == '')) {
+        _scrollController.jumpTo(0);
+        cityController.text =
+            MainCubit.get(context).selectedCity!.id.toString();
+      }
+      if (formKey.currentState!.validate()) {
+        MainCubit.get(context).addMyAddress(
+          buildingNumber: buildNumberAddressController.text,
+          city: int.parse(cityController.text),
+          governorate: int.parse(governorateController.text),
+          specialMarker: specialController.text,
+          streetName: streetNameController.text,
+        );
+      }
 
-    print(governorateController.text);
-    print(cityController.text);
+      print(governorateController.text);
+      print(cityController.text);
+    }
   }
 
   buildPersonalInformationWidget() {
