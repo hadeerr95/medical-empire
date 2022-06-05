@@ -737,6 +737,14 @@ class MainCubit extends Cubit<MainState> {
     if (cartMap[id]!.quantity < cartMap[id]!.stock) {
       cartMap[id]!.quantity = cartMap[id]!.quantity + 1;
 
+      if (cartListData == null) {
+        sl<CacheHelper>().get('cart').then((value) {
+          print('cart ---------------------------- $value');
+          if (value != null) {
+            cartListData = MainCartModel.fromJson(value).data;
+          }
+        });
+      }
       for (int i = 0; i < cartListData!.length; i++) {
         if (cartListData![i].id == id) {
           cartListData![i] = cartMap[id]!;
@@ -767,7 +775,14 @@ class MainCubit extends Cubit<MainState> {
   }) {
     if (cartMap[id]!.quantity > 1) {
       cartMap[id]!.quantity = cartMap[id]!.quantity - 1;
-
+      if (cartListData == null) {
+        sl<CacheHelper>().get('cart').then((value) {
+          print('cart ---------------------------- $value');
+          if (value != null) {
+            cartListData = MainCartModel.fromJson(value).data;
+          }
+        });
+      }
       for (int i = 0; i < cartListData!.length; i++) {
         if (cartListData![i].id == id) {
           cartListData![i] = cartMap[id]!;
@@ -1003,7 +1018,7 @@ class MainCubit extends Cubit<MainState> {
     emit(SelectedCityState());
   }
 
-  void getMyAddress() async {
+  getMyAddress() async {
     emit(MyAddressLoadingState());
     await _repository.getAddress().then((value) {
       addressFeedModel = AddressFeedModel.fromJson(value.data);
@@ -1018,7 +1033,7 @@ class MainCubit extends Cubit<MainState> {
     });
   }
 
-  void addMyAddress({
+  addMyAddress({
     required String buildingNumber,
     required int city,
     required int governorate,
@@ -1034,12 +1049,12 @@ class MainCubit extends Cubit<MainState> {
       special_marker: specialMarker,
       street_name: streetName,
     )
-        .then((value) {
+        .then((value) async {
       SimpleModel model = SimpleModel.fromJson(value.data);
+      await getMyAddress();
       if (model.message != null) {
         emit(AddAddressSuccessState(model.message!));
       }
-      getMyAddress();
     }).catchError((error) {
       print('Add Address Error------------------------');
       print(error.toString());
@@ -1251,7 +1266,7 @@ class MainCubit extends Cubit<MainState> {
     }
   }
 
-  void updateAccount({
+  updateAccount({
     required String name,
     required String email,
     required String phone,
@@ -1584,7 +1599,7 @@ class MainCubit extends Cubit<MainState> {
   // getCheckout  ----------------------start
   AddressFeedModel? checkoutModel;
 
-  void getCheckout() async {
+  getCheckout() async {
     checkoutModel = null;
     print(' -------------------------------------------getCheckout loading');
     emit(GetCheckoutLoading());
@@ -1790,29 +1805,17 @@ class MainCubit extends Cubit<MainState> {
     });
 
     emit(CreateCheckoutLoading());
-    // print('name: ${checkoutModel!.data.user.name}');
-    // print('email: ${checkoutModel!.data.user.email}');
-    // print('phone: ${checkoutModel!.data.user.phone}');
-    // print(
-    //     'government: ${checkoutModel!.data.shippingAddresses![shippingAddressIndex].shippingAddressGovernmentModel.id.toString()}');
-    // print(
-    //     'city: ${checkoutModel!.data.shippingAddresses![shippingAddressIndex].shippingAddressCitiesModel.id.toString()}');
-    // print(
-    //     'streetName: ${checkoutModel!.data.shippingAddresses![shippingAddressIndex].street_name}');
-    // print(
-    //     'buildingNumber: ${checkoutModel!.data.shippingAddresses![shippingAddressIndex].building_number}');
-    // print(
-    //     'specialMarker: ${checkoutModel!.data.shippingAddresses![shippingAddressIndex].special_marker}');
-    // print(
-    //     'paymentMethod: ${checkoutModel!.data.paymentMethod![paymentMethodIndex].id.toString()}');
-    // print('shippingPrice: ${totalShippingPrice.toString()}');
-    // print('extra_shipping: ${extraShippingPrice.toString()}');
-    // print('overweightPrice: 55');
-    // print(
-    //     'promoCode: ${couponsModel != null && couponsModel!.data != null ? couponsModel!.data!.coupon.name : ''}');
-    // print('notes: notes');
-    // print('items: $items');
 
+    var city = "";
+    if (checkoutModel == null ||
+        checkoutModel!.data.shippingAddresses == null ||
+        checkoutModel!.data.shippingAddresses!.isEmpty) {
+      await getCheckout();
+    } /*else {
+      city = checkoutModel!.data.shippingAddresses![shippingAddressIndex]
+          .shippingAddressCitiesModel.id
+          .toString();
+    }*/
     await _repository
         .createCheckout(
       city: checkoutModel!.data.shippingAddresses![shippingAddressIndex]
@@ -1834,8 +1837,8 @@ class MainCubit extends Cubit<MainState> {
           checkoutModel!.data.paymentMethod![paymentMethodIndex].id.toString(),
       extraShipping: extraShippingPrice.toString(),
       items: items,
-      notes: 'notes',
-      overweightPrice: '0',
+      notes: note,
+      overweightPrice: overWeightTax.toString(),
       promoCode: couponsModel != null && couponsModel!.data != null
           ? couponsModel!.data!.coupon.name
           : '',
@@ -1924,6 +1927,8 @@ class MainCubit extends Cubit<MainState> {
   num finalTotalCart = 0;
   int totalShippingPrice = 0;
   int extraShippingPrice = 0;
+  num overWeightTax = 0;
+  String note = "";
 
   void sumShipping({int governorateID = 0}) {
     if (checkoutModel!.data.shippingAddresses!.isEmpty) {
@@ -1989,20 +1994,18 @@ class MainCubit extends Cubit<MainState> {
 
   // calculate Final total cart
   calculateFinalTotalCart({num? overTax}) {
+    overWeightTax = 0;
     if (overTax == null) {
       finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
     } else {
+      overWeightTax = overTax;
       finalTotalCart =
           firstTotalCart + totalShippingPrice + extraShippingPrice + overTax;
     }
+  }
 
-    // if (couponsModel != null && couponsModel!.data != null) {
-    //   finalTotalCart -= couponsModel!.data!.coupon.amount;
-    // }
-
-    print("<<<<<<<<<<<<<<<<<<<$extraShippingPrice");
-    print("<<<<<<<<<<<<<<<<<<<$finalTotalCart");
-    print("<<<<<<<<<<<<<<<<<<<$totalShippingPrice");
-    print("<<<<<<<<<<<<<<<<<<<$firstTotalCart");
+  void updateNote(String orderNote) {
+    note = "";
+    note = orderNote;
   }
 }

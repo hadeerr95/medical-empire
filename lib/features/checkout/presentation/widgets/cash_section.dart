@@ -186,7 +186,7 @@ class CashSection extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '$overWeightTax ${appTranslation(context).egp}',
+                  '${MainCubit.get(context).overWeightTax} ${appTranslation(context).egp}',
                   style: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: HexColor(secondaryVariantDark),
                         fontWeight: FontWeight.w400,
