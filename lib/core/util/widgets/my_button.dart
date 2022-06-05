@@ -12,6 +12,7 @@ class MyButton extends StatelessWidget {
   bool stroke;
   FontWeight fontWeight;
   double fontsize;
+  Widget? iconBehindText;
 
   MyButton({
     Key? key,
@@ -23,6 +24,7 @@ class MyButton extends StatelessWidget {
     this.stroke = false,
     this.fontWeight = FontWeight.bold,
     this.fontsize = 14.0,
+    this.iconBehindText,
   }) : super(key: key);
 
   @override
@@ -33,17 +35,38 @@ class MyButton extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: MaterialButton(
         onPressed: voidCallback,
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                color: textColor,
-                fontSize: fontsize,
+        child: iconBehindText == null
+            ? Text(
+                text,
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      color: textColor,
+                      fontSize: fontsize,
+                    ),
+              )
+            : Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: textColor,
+                            fontSize: fontsize,
+                          ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(start: 20),
+                      child: iconBehindText,
+                    )
+                  ],
+                ),
               ),
-        ),
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius ),
-        border:stroke? Border.all(color: HexColor(mainColor)) : null,
+        borderRadius: BorderRadius.circular(radius),
+        border: stroke ? Border.all(color: HexColor(mainColor)) : null,
         color: color,
       ),
     );

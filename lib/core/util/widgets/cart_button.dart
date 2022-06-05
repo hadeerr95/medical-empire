@@ -8,9 +8,9 @@ import 'package:medical_empire_app/core/util/cubit/state.dart';
 import 'package:medical_empire_app/core/util/widgets/my_button.dart';
 import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 import 'package:medical_empire_app/features/login/presentation/pages/login_page.dart';
-import 'package:medical_empire_app/features/main/presentation/widgets/single_cart_item.dart';
 
 import '../constants.dart';
+import 'asset_svg.dart';
 
 class CartButton extends StatefulWidget {
   final ProductModel product;
@@ -181,70 +181,66 @@ class _CartButtonState extends State<CartButton> {
                       //   productModel: widget.product,
                       // );
 
-
-
                       if (MainCubit.get(context).userSigned) {
-                        if(widget.product.color_attributes == null && widget.product.size_attributes == null){
+                        if (widget.product.color_attributes == null &&
+                            widget.product.size_attributes == null) {
                           print('no color or size');
                           addToCart(
                             context: context,
-                            productModel:
-                            widget.product,
+                            productModel: widget.product,
                           );
-                        }
-                        else if(widget.product.color_attributes != null  && widget.product.size_attributes == null){
-                          if(MainCubit.get(context).currentColor < 0 ){
-                            showToast(message: appTranslation(context).pleaseSelectColor, toastStates: ToastStates.WARNING);
-                          }else{
+                        } else if (widget.product.color_attributes != null &&
+                            widget.product.size_attributes == null) {
+                          if (MainCubit.get(context).currentColor < 0) {
+                            showToast(
+                                message:
+                                    appTranslation(context).pleaseSelectColor,
+                                toastStates: ToastStates.WARNING);
+                          } else {
                             print('yes color no size');
                             addToCart(
                               context: context,
-                              productModel:
-                              widget.product,
+                              productModel: widget.product,
                             );
                           }
-                        }
-                        else if(widget.product.color_attributes == null  && widget.product.size_attributes != null){
-                          if(MainCubit.get(context).currentSize < 0 ){
-                            showToast(message: appTranslation(context).pleaseSelectSize, toastStates: ToastStates.WARNING);
-                          }else{
+                        } else if (widget.product.color_attributes == null &&
+                            widget.product.size_attributes != null) {
+                          if (MainCubit.get(context).currentSize < 0) {
+                            showToast(
+                                message:
+                                    appTranslation(context).pleaseSelectSize,
+                                toastStates: ToastStates.WARNING);
+                          } else {
                             print('no color yes size');
                             addToCart(
                               context: context,
-                              productModel:
-                              widget.product,
+                              productModel: widget.product,
                             );
                           }
-                        }
-                        else{
-
-                          if(MainCubit.get(context).currentSize< 0 ){
-                            showToast(message: 'please select Size', toastStates: ToastStates.WARNING);
-                          }else if(MainCubit.get(context).currentColor < 0){
-                            showToast(message: 'please select Color', toastStates: ToastStates.WARNING);
-                          } else{
+                        } else {
+                          if (MainCubit.get(context).currentSize < 0) {
+                            showToast(
+                                message: 'please select Size',
+                                toastStates: ToastStates.WARNING);
+                          } else if (MainCubit.get(context).currentColor < 0) {
+                            showToast(
+                                message: 'please select Color',
+                                toastStates: ToastStates.WARNING);
+                          } else {
                             print('yes color yes size');
                             addToCart(
                               context: context,
-                              productModel:
-                              widget.product,
+                              productModel: widget.product,
                             );
                           }
-
                         }
-
                       } else {
                         showToast(
-                            toastStates:
-                            ToastStates.WARNING,
-                            message:
-                            appTranslation(context).please_login_to_add_or_remove_from_cart);
+                            toastStates: ToastStates.WARNING,
+                            message: appTranslation(context)
+                                .please_login_to_add_or_remove_from_cart);
                         navigateTo(context, LoginPage());
                       }
-
-
-
-
 
                       setState(() {
                         count++;
@@ -264,6 +260,11 @@ class _CartButtonState extends State<CartButton> {
                 color: MainCubit.get(context).cartMap[widget.product.id] != null
                     ? HexColor(red)
                     : HexColor(mainColor),
+                radius: 30,
+                iconBehindText: AssetSvg(
+                  imagePath: 'add_cart',
+                  color: Colors.white,
+                ),
               );
       },
     );

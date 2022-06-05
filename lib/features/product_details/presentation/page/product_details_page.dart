@@ -452,11 +452,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                     ),
                                     space10Horizontal,
 
-                                    if (MainCubit.get(context).cartMap[MainCubit.get(context).productFeedModel!.data.product.id] != null)
+                                    if (MainCubit.get(context).cartMap[
+                                            MainCubit.get(context)
+                                                .productFeedModel!
+                                                .data
+                                                .product
+                                                .id] !=
+                                        null)
                                       // if (MainCubit.get(context).productFeedModel!.data.product.color_attributes != null
                                       //   && MainCubit.get(context).productFeedModel!.data.product.color_attributes!.any((element) =>
                                       //   element.attribute.id == MainCubit.get(context).cartMap[MainCubit.get(context).productFeedModel!.data.product.id]!.attributeId))
-                                        Expanded(
+                                      Expanded(
                                         child: SizedBox(
                                           height: 46.0,
                                           child: MyButton(
@@ -483,11 +489,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                                           () {
                                                         Navigator.pop(context);
                                                       },
-                                                      message:
-                                                      appTranslation(context).are_you_sure_to_remove,
+                                                      message: appTranslation(
+                                                              context)
+                                                          .are_you_sure_to_remove,
                                                       // title: 'title',
-                                                      pushButtonText: appTranslation(context).remove,
-                                                      popButtonText: appTranslation(context).cancel,
+                                                      pushButtonText:
+                                                          appTranslation(
+                                                                  context)
+                                                              .remove,
+                                                      popButtonText:
+                                                          appTranslation(
+                                                                  context)
+                                                              .cancel,
                                                     );
                                                   });
                                             },
@@ -533,86 +546,155 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                     //   ),
                                     // ),
 
-
-                                    if (MainCubit.get(context).cartMap[MainCubit.get(context).productFeedModel!.data.product.id] == null)
+                                    if (MainCubit.get(context).cartMap[
+                                            MainCubit.get(context)
+                                                .productFeedModel!
+                                                .data
+                                                .product
+                                                .id] ==
+                                        null)
                                       // if (MainCubit.get(context).productFeedModel!.data.product.color_attributes != null
                                       //   && MainCubit.get(context).productFeedModel!.data.product.color_attributes!.any((element) =>
                                       //   element.attribute.id != MainCubit.get(context).cartMap[MainCubit.get(context).productFeedModel!.data.product.id]!.attributeId))
-                                        Expanded(
+                                      Expanded(
                                         child: SizedBox(
                                           height: 46.0,
                                           child: MyButton(
                                             voidCallback: () {
-                                              if (MainCubit.get(context).userSigned) {
-                                                if(MainCubit.get(context).productFeedModel!.data.product.color_attributes == null && MainCubit.get(context).productFeedModel!.data.product.size_attributes == null){
+                                              if (MainCubit.get(context)
+                                                  .userSigned) {
+                                                if (MainCubit.get(context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product
+                                                            .color_attributes ==
+                                                        null &&
+                                                    MainCubit.get(context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product
+                                                            .size_attributes ==
+                                                        null) {
                                                   addToCart(
                                                     context: context,
                                                     productModel:
-                                                    MainCubit.get(context)
-                                                        .productFeedModel!
-                                                        .data
-                                                        .product,
+                                                        MainCubit.get(context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product,
                                                   );
-                                                }
-                                                else if(MainCubit.get(context).productFeedModel!.data.product.color_attributes != null  && MainCubit.get(context).productFeedModel!.data.product.size_attributes == null){
-                                                  if(MainCubit.get(context).currentColor < 0 ){
-                                                    showToast(message: appTranslation(context).pleaseSelectColor, toastStates: ToastStates.WARNING);
-                                                  }else{
+                                                } else if (MainCubit.get(
+                                                                context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product
+                                                            .color_attributes !=
+                                                        null &&
+                                                    MainCubit.get(context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product
+                                                            .size_attributes ==
+                                                        null) {
+                                                  if (MainCubit.get(context)
+                                                          .currentColor <
+                                                      0) {
+                                                    showToast(
+                                                        message: appTranslation(
+                                                                context)
+                                                            .pleaseSelectColor,
+                                                        toastStates: ToastStates
+                                                            .WARNING);
+                                                  } else {
                                                     addToCart(
                                                       context: context,
                                                       productModel:
-                                                      MainCubit.get(context)
-                                                          .productFeedModel!
-                                                          .data
-                                                          .product,
+                                                          MainCubit.get(context)
+                                                              .productFeedModel!
+                                                              .data
+                                                              .product,
                                                     );
                                                   }
-                                                }
-                                                else if(MainCubit.get(context).productFeedModel!.data.product.color_attributes == null  && MainCubit.get(context).productFeedModel!.data.product.size_attributes != null){
-                                                  if(MainCubit.get(context).currentSize < 0 ){
-                                                    showToast(message: appTranslation(context).pleaseSelectSize, toastStates: ToastStates.WARNING);
-                                                  }else{
+                                                } else if (MainCubit.get(
+                                                                context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product
+                                                            .color_attributes ==
+                                                        null &&
+                                                    MainCubit.get(context)
+                                                            .productFeedModel!
+                                                            .data
+                                                            .product
+                                                            .size_attributes !=
+                                                        null) {
+                                                  if (MainCubit.get(context)
+                                                          .currentSize <
+                                                      0) {
+                                                    showToast(
+                                                        message: appTranslation(
+                                                                context)
+                                                            .pleaseSelectSize,
+                                                        toastStates: ToastStates
+                                                            .WARNING);
+                                                  } else {
                                                     addToCart(
                                                       context: context,
                                                       productModel:
-                                                      MainCubit.get(context)
-                                                          .productFeedModel!
-                                                          .data
-                                                          .product,
+                                                          MainCubit.get(context)
+                                                              .productFeedModel!
+                                                              .data
+                                                              .product,
                                                     );
                                                   }
-                                                }
-                                                else{
-
-                                                  if(MainCubit.get(context).currentSize< 0 ){
-                                                    showToast(message: 'please select Size', toastStates: ToastStates.WARNING);
-                                                  }else if(MainCubit.get(context).currentColor < 0){
-                                                    showToast(message: 'please select Color', toastStates: ToastStates.WARNING);
-                                                  } else{
+                                                } else {
+                                                  if (MainCubit.get(context)
+                                                          .currentSize <
+                                                      0) {
+                                                    showToast(
+                                                        message:
+                                                            'please select Size',
+                                                        toastStates: ToastStates
+                                                            .WARNING);
+                                                  } else if (MainCubit.get(
+                                                              context)
+                                                          .currentColor <
+                                                      0) {
+                                                    showToast(
+                                                        message:
+                                                            'please select Color',
+                                                        toastStates: ToastStates
+                                                            .WARNING);
+                                                  } else {
                                                     addToCart(
                                                       context: context,
                                                       productModel:
-                                                      MainCubit.get(context)
-                                                          .productFeedModel!
-                                                          .data
-                                                          .product,
+                                                          MainCubit.get(context)
+                                                              .productFeedModel!
+                                                              .data
+                                                              .product,
                                                     );
                                                   }
-
                                                 }
-
                                               } else {
                                                 showToast(
                                                     toastStates:
                                                         ToastStates.WARNING,
-                                                    message:
-                                                    appTranslation(context).please_login_to_add_or_remove_from_cart);
-                                                navigateTo(context, LoginPage());
+                                                    message: appTranslation(
+                                                            context)
+                                                        .please_login_to_add_or_remove_from_cart);
+                                                navigateTo(
+                                                    context, LoginPage());
                                               }
                                             },
                                             text: appTranslation(context)
                                                 .addToCart,
                                             color: HexColor(mainColor),
+                                            radius: 30,
+                                            iconBehindText: AssetSvg(
+                                              imagePath: 'add_cart',
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),

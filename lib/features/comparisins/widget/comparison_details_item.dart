@@ -3,13 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:medical_empire_app/core/models/compares_model.dart';
-import 'package:medical_empire_app/core/models/home_feed_model.dart';
-import 'package:medical_empire_app/core/models/product_details_model.dart';
-import 'package:medical_empire_app/core/network/end_points.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/cubit/state.dart';
 import 'package:medical_empire_app/core/util/widgets/app_text_button.dart';
+import 'package:medical_empire_app/core/util/widgets/asset_svg.dart';
 import 'package:medical_empire_app/core/util/widgets/my_button.dart';
 import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 import 'package:medical_empire_app/features/info_product/presentation/widget/list_item_color.dart';
@@ -18,10 +16,8 @@ import 'package:medical_empire_app/features/product_details/presentation/page/pr
 
 class ComparisonsDetailsItem extends StatelessWidget {
   final ComparesDetailsModel model;
-  const ComparisonsDetailsItem({
-    Key? key,
-    required this.model
-  }) : super(key: key);
+  const ComparisonsDetailsItem({Key? key, required this.model})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +27,9 @@ class ComparisonsDetailsItem extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(color: HexColor(grey),),
+            border: Border.all(
+              color: HexColor(grey),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,13 +41,15 @@ class ComparisonsDetailsItem extends StatelessWidget {
                     Text(
                       appTranslation(context).product_details,
                       style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        color:MainCubit.get(context).isDark? HexColor(surface): HexColor(black),
-                      ),
+                            color: MainCubit.get(context).isDark
+                                ? HexColor(surface)
+                                : HexColor(black),
+                          ),
                     ),
                     const Spacer(),
                     AppTextButton(
                       label: appTranslation(context).view,
-                      onPress: (){
+                      onPress: () {
                         navigateTo(
                           context,
                           ProductDetailsPage(
@@ -73,9 +73,9 @@ class ComparisonsDetailsItem extends StatelessWidget {
                   height: 140.0,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color:HexColor(white),
+                    color: HexColor(white),
                     borderRadius: BorderRadius.circular(8.0),
-                    image:   DecorationImage(
+                    image: DecorationImage(
                       image: NetworkImage(
                         model.product.image,
                       ),
@@ -85,16 +85,20 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       width: 1.0,
                     ),
                   ),
-
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  displayTranslatedText(context: context, ar: model.product.name.ar, en: model.product.name.en),
+                  displayTranslatedText(
+                      context: context,
+                      ar: model.product.name.ar,
+                      en: model.product.name.en),
                   style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: MainCubit.get(context).isDark? HexColor(surface): secondaryVariant,
-                  ),
+                        color: MainCubit.get(context).isDark
+                            ? HexColor(surface)
+                            : secondaryVariant,
+                      ),
                 ),
               ),
               Padding(
@@ -104,35 +108,25 @@ class ComparisonsDetailsItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${appTranslation(context).egp} ${model.product.price}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
-
                     Builder(builder: (context) {
                       if (model.product.quantityInStock == 0) {
                         return Text(
                           appTranslation(context).out_of_stock,
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption!
-                              .copyWith(
-                            color: HexColor(red),
-                          ),
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                                color: HexColor(red),
+                              ),
                         );
                       }
                       return Text(
                         '${model.product.quantityInStock} ${appTranslation(context).in_stock}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .caption!
-                            .copyWith(
-                          color: HexColor(green),
-                        ),
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              color: HexColor(green),
+                            ),
                       );
                     }),
                   ],
@@ -147,8 +141,8 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).country,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
                     Expanded(
@@ -156,11 +150,10 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         model.product.countryOrigin,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          color: HexColor(grey),
-                        ),
+                              color: HexColor(grey),
+                            ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -173,20 +166,22 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).brand,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
                     Expanded(
                       flex: 2,
                       child: Text(
-                        displayTranslatedText(context: context, ar: model.product.brand.name.ar, en: model.product.brand.name.en),
+                        displayTranslatedText(
+                            context: context,
+                            ar: model.product.brand.name.ar,
+                            en: model.product.brand.name.en),
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          color: HexColor(grey),
-                        ),
+                              color: HexColor(grey),
+                            ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -199,8 +194,8 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).rating,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
                     Expanded(
@@ -211,14 +206,15 @@ class ComparisonsDetailsItem extends StatelessWidget {
                             ignoreGestures: true,
                             tapOnlyMode: true,
                             updateOnDrag: false,
-                            initialRating:model.product.reviews != null ? 0 : 0,
+                            initialRating:
+                                model.product.reviews != null ? 0 : 0,
                             minRating: 0,
                             itemSize: 12.0,
                             direction: Axis.horizontal,
                             allowHalfRating: true,
                             itemCount: 5,
                             itemPadding:
-                            const EdgeInsets.symmetric(horizontal: 1.0),
+                                const EdgeInsets.symmetric(horizontal: 1.0),
                             itemBuilder: (context, _) => Icon(
                               Icons.star,
                               color: HexColor(secondColor),
@@ -229,7 +225,7 @@ class ComparisonsDetailsItem extends StatelessWidget {
                           ),
                           space3Horizontal,
                           Text(
-                            model.product.reviews != null? '(0)' :'' ,
+                            model.product.reviews != null ? '(0)' : '',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.caption,
@@ -237,7 +233,6 @@ class ComparisonsDetailsItem extends StatelessWidget {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -250,20 +245,23 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).description,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
                     Expanded(
                       flex: 2,
-                      child:  Text(
-                        displayTranslatedText(context: context, ar: model.product.short_desc.ar, en: model.product.short_desc.en,),
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                          color: HexColor(grey),
+                      child: Text(
+                        displayTranslatedText(
+                          context: context,
+                          ar: model.product.short_desc.ar,
+                          en: model.product.short_desc.en,
                         ),
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              color: HexColor(grey),
+                            ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -276,40 +274,40 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).size,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
-                    Builder(
-                        builder: (context) {
-                          if(model.product.size_attributes != null){
-                            return Expanded(
-                              flex: 2,
-                              child: SizedBox(
-                                height: 20.0,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  itemBuilder: (context, index) => ListItemSize(model : model.product.size_attributes![index]),
-                                  separatorBuilder: (context, index) => space5Horizontal,
-                                  itemCount: model.product.size_attributes!.length,
-                                ),
-                              ),
-                            );
-                          }else{
-                            return Expanded(
-                              flex: 2,
-                              child: Text(
-                                appTranslation(context).no_information_available,
-                                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: HexColor(grey),
-                                ),
-                              ),
-                            );
-                          }
-
-                        }
-                    ),
+                    Builder(builder: (context) {
+                      if (model.product.size_attributes != null) {
+                        return Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            height: 20.0,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) => ListItemSize(
+                                  model: model.product.size_attributes![index]),
+                              separatorBuilder: (context, index) =>
+                                  space5Horizontal,
+                              itemCount: model.product.size_attributes!.length,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Expanded(
+                          flex: 2,
+                          child: Text(
+                            appTranslation(context).no_information_available,
+                            style:
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      color: HexColor(grey),
+                                    ),
+                          ),
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),
@@ -322,39 +320,41 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).color,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
-                    Builder(
-                        builder: (context) {
-                          if (model.product.color_attributes != null) {
-                            return Expanded(
-                            flex: 2,
-                            child: SizedBox(
-                              height: 30.0,
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) => ListItemColor(model : model.product.color_attributes![index]),
-                                separatorBuilder: (context, index) => space5Horizontal,
-                                itemCount: model.product.color_attributes!.length,
-                              ),
+                    Builder(builder: (context) {
+                      if (model.product.color_attributes != null) {
+                        return Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            height: 30.0,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) => ListItemColor(
+                                  model:
+                                      model.product.color_attributes![index]),
+                              separatorBuilder: (context, index) =>
+                                  space5Horizontal,
+                              itemCount: model.product.color_attributes!.length,
                             ),
-                          );
-                          }else{
-                            return Expanded(
-                              flex: 2,
-                              child: Text(
-                                appTranslation(context).no_information_available,
-                                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: HexColor(grey),
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                    ),
+                          ),
+                        );
+                      } else {
+                        return Expanded(
+                          flex: 2,
+                          child: Text(
+                            appTranslation(context).no_information_available,
+                            style:
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      color: HexColor(grey),
+                                    ),
+                          ),
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),
@@ -367,100 +367,102 @@ class ComparisonsDetailsItem extends StatelessWidget {
                       child: Text(
                         appTranslation(context).weight,
                         style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
                     Expanded(
                       flex: 2,
                       child: Text(
-                        model.product.weight ?? appTranslation(context).no_information_available,
+                        model.product.weight ??
+                            appTranslation(context).no_information_available,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          color: HexColor(grey),
-                        ),
+                              color: HexColor(grey),
+                            ),
                       ),
                     ),
-
                   ],
                 ),
               ),
               myDivider(context),
               if (MainCubit.get(context).cartMap[model.product.id] != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 38.0,
-                  child: MyButton(
-                    voidCallback: (){
-                      showDialog(
-                          context: context,
-                          builder:
-                              (BuildContext context) {
-                            return TwoOptionsDialog(
-                              pushButtonVoidCallback:
-                                  () {
-                                removeFromCart(
-                                  context: context,
-                                  id: model.product.id,
-                                );
-                                Navigator.pop(context);
-                              },
-                              popButtonVoidCallback:
-                                  () {
-                                Navigator.pop(context);
-                              },
-                              message:
-                              appTranslation(context).are_you_sure_to_remove,
-                              // title: 'title',
-                              pushButtonText: appTranslation(context).remove,
-                              popButtonText: appTranslation(context).cancel,
-                            );
-                          });
-                    },
-                    text: appTranslation(context).remove_from_cart,
-                    color: HexColor(red),
-                    radius: 8.0,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 38.0,
+                    child: MyButton(
+                      voidCallback: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return TwoOptionsDialog(
+                                pushButtonVoidCallback: () {
+                                  removeFromCart(
+                                    context: context,
+                                    id: model.product.id,
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                popButtonVoidCallback: () {
+                                  Navigator.pop(context);
+                                },
+                                message: appTranslation(context)
+                                    .are_you_sure_to_remove,
+                                // title: 'title',
+                                pushButtonText: appTranslation(context).remove,
+                                popButtonText: appTranslation(context).cancel,
+                              );
+                            });
+                      },
+                      text: appTranslation(context).remove_from_cart,
+                      color: HexColor(red),
+                      radius: 8.0,
+                    ),
                   ),
                 ),
-              ),
               if (MainCubit.get(context).cartMap[model.product.id] == null)
                 Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 38.0,
-                  child: MyButton(
-                    voidCallback: (){
-                      addToCart(
-                        context: context,
-                        productModel: model.product,
-                      );
-                    },
-                    text: appTranslation(context).addToCart,
-                    color: HexColor(mainColor),
-                    radius: 8.0,
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 38.0,
+                    child: MyButton(
+                      voidCallback: () {
+                        addToCart(
+                          context: context,
+                          productModel: model.product,
+                        );
+                      },
+                      text: appTranslation(context).addToCart,
+                      color: HexColor(mainColor),
+                      radius: 30.0,
+                      iconBehindText: AssetSvg(
+                        imagePath: 'add_cart',
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
               Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0 , bottom: 8.0),
+                padding: const EdgeInsetsDirectional.only(
+                    start: 8.0, end: 8.0, bottom: 8.0),
                 child: SizedBox(
                   height: 38.0,
                   child: MyButton(
-                    voidCallback: (){
+                    voidCallback: () {
                       showDialog(
                           context: context,
-                          builder:
-                              (BuildContext context) {
+                          builder: (BuildContext context) {
                             return TwoOptionsDialog(
                               pushButtonVoidCallback: () {
-                                    MainCubit.get(context).removeFromCompares(compareId: model.id);
-                                    Navigator.pop(context);
+                                MainCubit.get(context)
+                                    .removeFromCompares(compareId: model.id);
+                                Navigator.pop(context);
                               },
                               popButtonVoidCallback: () {
                                 Navigator.pop(context);
                               },
-                              message:
-                              appTranslation(context).are_you_sure_to_remove,
+                              message: appTranslation(context)
+                                  .are_you_sure_to_remove,
                               // title: 'title',
                               pushButtonText: appTranslation(context).remove,
                               popButtonText: appTranslation(context).cancel,
@@ -469,7 +471,7 @@ class ComparisonsDetailsItem extends StatelessWidget {
                     },
                     text: appTranslation(context).delete,
                     color: HexColor(red),
-                    radius: 8.0,
+                    radius: 30.0,
                   ),
                 ),
               ),
