@@ -33,7 +33,7 @@ class ShippingAddressForm extends StatelessWidget {
       onInit: () {
         var selected = MainCubit.get(context).selectedGovernment;
         if (selected != null ) {
-          selectGovernorate(context, selected);
+          selectGovernorate(context, selected,selectedCity:  MainCubit.get(context).selectedCity);
         }
       },
       child: Form(
@@ -197,8 +197,8 @@ class ShippingAddressForm extends StatelessWidget {
     );
   }
 
-  void selectGovernorate(BuildContext context, GovernmentModel selected) {
-    MainCubit.get(context).selectGovernment(context ,selected);
+  void selectGovernorate(BuildContext context, GovernmentModel selected ,{CitiesModel? selectedCity}) {
+    MainCubit.get(context).selectGovernment( selected ,citiesModel: selectedCity);
     MainCubit.get(context).calculateFinalTotalCart();
     governorateController.text = selected.id.toString();
   }

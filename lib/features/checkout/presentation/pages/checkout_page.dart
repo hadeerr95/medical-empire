@@ -72,15 +72,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
           .scaffoldBackgroundColor,
       body: BlocConsumer<MainCubit, MainState>(
         listener: (context, state) {
+          if (state is AddAddressSuccessState) {
+            MainCubit.get(context).createCheckout();
+          }
           if (state is CreateCheckoutSuccess) {
+            MainCubit.get(context).clearCart();
             showToast(
               message: state.message,
               toastStates: ToastStates.SUCCESS,
             );
-            MainCubit.get(context).clearCart();
           }
-
           if (state is CartClear) {
+            print("---- back  -----");
             Navigator.pop(context);
           }
         },
@@ -90,6 +93,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 .get(context)
                 .checkoutModel != null,
             builder: (context) {
+              var shippingAddress =
+                  MainCubit.get(context).checkoutModel!.data.shippingAddresses;
+              int addresses = 0;
+              if (shippingAddress != null) {
+                addresses = shippingAddress.length;
+              }
               if (MainCubit
                   .get(context)
                   .checkoutModel!
@@ -99,12 +108,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 setAddressControllers(0);
                 isFirstTime = false;
               }
-              int addresses = MainCubit
-                  .get(context)
-                  .checkoutModel!
-                  .data
-                  .shippingAddresses!
-                  .length;
               return SingleChildScrollView(
                 controller: _scrollController,
                 physics: const BouncingScrollPhysics(),
@@ -117,7 +120,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     children: [
                       BoxItem(
                         title: appTranslation(context).shipping_address,
-                        child: addresses == 0
+                        child: shippingAddress == null || addresses == 0
                             ? buildAddressesWidget()
                             : StreamBuilder<int>(
                             stream: _selectedAddressSubject.stream,
@@ -253,17 +256,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         const Center(child: CupertinoActivityIndicator()),
                       if (state is! CreateCheckoutLoading)
                         MyButton(
-                          voidCallback: () {
-                            addresses == 0 ? saveAddress():
-                            updateAddress(MainCubit.get(context).checkoutModel!.data.shippingAddresses![_selectedAddressSubject.value].id);
-                            saveProfileInformation();
-                            MainCubit.get(context).changeShippingAddressIndex(index: _selectedAddressSubject.value);
-                            //MainCubit.get(context).createCheckout();
-                            MainCubit
-                                .get(context)
-                                .getMyAddress();
-                            MainCubit.get(context).createCheckout();
-
+                          voidCallback: () async{
+                            if (shippingAddress == null || addresses == 0) {
+                              await saveAddress();
+                            }
+                            else {
+                              updateAddress(MainCubit.get(context).checkoutModel
+                                  !.data.shippingAddresses![_selectedAddressSubject.value].id);
+                            }
+                            await saveProfileInformation();
+                             MainCubit.get(context).changeShippingAddressIndex(index: _selectedAddressSubject.value);
                           },
                           text: appTranslation(context).completeOrder,
                           color: HexColor(mainColor),
@@ -286,7 +288,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       listener: (BuildContext context, state) {
         if (state is AddAddressSuccessState) {
           showToast(message: state.message, toastStates: ToastStates.SUCCESS);
-          Navigator.pop(context);
         }
       },
       builder: (BuildContext context, state) {
@@ -314,50 +315,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  void saveAddress() {
-    int addresses =
-        MainCubit
-            .get(context)
-            .checkoutModel!
-            .data
-            .shippingAddresses!
-            .length;
-    if (addresses == 0) {
-      if (governorateController.text.isEmpty ||
-          governorateController.text == '') {
-        _scrollController.jumpTo(0);
-        governorateController.text =
-            MainCubit
-                .get(context)
-                .selectedGovernment!
-                .id
-                .toString();
-      }
-      if ((cityController.text.isEmpty || cityController.text == '')) {
-        _scrollController.jumpTo(0);
-        cityController.text =
-            MainCubit
-                .get(context)
-                .selectedCity!
-                .id
-                .toString();
-      }
-      if (formKey.currentState!.validate()) {
-        MainCubit.get(context).addMyAddress(
-          buildingNumber: buildNumberAddressController.text,
-          city: int.parse(cityController.text),
-          governorate: int.parse(governorateController.text),
-          specialMarker: specialController.text,
-          streetName: streetNameController.text,
-        );
-      }
-
-      print(governorateController.text);
-      print(cityController.text);
+  saveAddress() async {
+    if (governorateController.text.isEmpty ||
+        governorateController.text == '') {
+      governorateController.text =
+          MainCubit.get(context).selectedGovernment!.id.toString();
+    }
+    if ((cityController.text.isEmpty || cityController.text == '')) {
+      cityController.text = MainCubit.get(context).selectedCity!.id.toString();
+    }
+    if (formKey.currentState!.validate()) {
+      await MainCubit.get(context).addMyAddress(
+        buildingNumber: buildNumberAddressController.text,
+        city: int.parse(cityController.text),
+        governorate: int.parse(governorateController.text),
+        specialMarker: specialController.text,
+        streetName: streetNameController.text,
+      );
+    } else {
+      _scrollController.jumpTo(0);
     }
   }
 
-  void updateAddress(int addressId) {
+   updateAddress(int addressId) async{
     if (governorateController.text.isEmpty ||
         governorateController.text == '') {
       _scrollController.jumpTo(0);
@@ -379,7 +359,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
     if (formKey.currentState!.validate()) {
       MainCubit.get(context).deleteMyAddress(addressId: addressId);
-      MainCubit.get(context).addMyAddress(
+      await MainCubit.get(context).addMyAddress(
         buildingNumber: buildNumberAddressController.text,
         city: int.parse(cityController.text),
         governorate: int.parse(governorateController.text),
@@ -399,8 +379,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  void saveProfileInformation() {
-    MainCubit.get(context).updateAccount(
+  saveProfileInformation() async {
+    await MainCubit.get(context).updateAccount(
         name: nameController.text,
         email: emailController.text,
         phone: phoneController.text);
@@ -413,6 +393,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
         controller: notesController,
         keyboardType: TextInputType.multiline,
         maxLines: 3,
+        onChanged: (note) {
+          MainCubit.get(context).updateNote(note);
+        },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
         ),

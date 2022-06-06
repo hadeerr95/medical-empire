@@ -1006,12 +1006,12 @@ class MainCubit extends Cubit<MainState> {
   GovernmentModel? selectedGovernment;
   CitiesModel? selectedCity;
 
-  void selectGovernment(BuildContext context , GovernmentModel model) {
+  void selectGovernment(GovernmentModel model ,{ CitiesModel? citiesModel}) {
     selectedGovernment = model;
-    if( MainCubit.get(context).selectedCity == null) {
-      selectedCity = selectedGovernment!.cities[0];
+    selectedCity = citiesModel ?? selectedGovernment!.cities[0];
+    if(checkoutModel != null && cartMap.isNotEmpty) {
+      sumShipping(governorateID: model.id);
     }
-    sumShipping(governorateID: model.id);
     emit(SelectedGovernmentState());
   }
 
@@ -1818,6 +1818,7 @@ class MainCubit extends Cubit<MainState> {
           .shippingAddressCitiesModel.id
           .toString();
     }*/
+    await getCheckout();
     await _repository
         .createCheckout(
       city: checkoutModel!.data.shippingAddresses![shippingAddressIndex]
@@ -1865,8 +1866,8 @@ class MainCubit extends Cubit<MainState> {
   void clearCart() {
     sl<CacheHelper>().clear('cart').then((value) {
       cartMap = {};
+      print("asdasdsa"+cartMap.toString());
       cartListData = [];
-
       emit(CartClear());
     });
   }
