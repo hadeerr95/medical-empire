@@ -127,9 +127,9 @@ class MainCubit extends Cubit<MainState> {
         systemOverlayStyle: Platform.isIOS
             ? null
             : const SystemUiOverlayStyle(
-                statusBarColor: Colors.white,
-                statusBarIconBrightness: Brightness.dark,
-              ),
+          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.dark,
+        ),
         backgroundColor: Colors.white,
         elevation: 0.0,
         titleSpacing: 0.0,
@@ -220,9 +220,9 @@ class MainCubit extends Cubit<MainState> {
         systemOverlayStyle: Platform.isIOS
             ? null
             : SystemUiOverlayStyle(
-                statusBarColor: HexColor(scaffoldBackground),
-                statusBarIconBrightness: Brightness.light,
-              ),
+          statusBarColor: HexColor(scaffoldBackground),
+          statusBarIconBrightness: Brightness.light,
+        ),
         backgroundColor: HexColor(scaffoldBackground),
         elevation: 0.0,
         titleSpacing: 0.0,
@@ -674,7 +674,7 @@ class MainCubit extends Cubit<MainState> {
 
   bool itemColorId() {
     return cartMap[productFeedModel!.data.product.color_attributes!
-            .map((e) => e.attribute.id)] !=
+        .map((e) => e.attribute.id)] !=
         storedColorSelected;
   }
 
@@ -704,11 +704,11 @@ class MainCubit extends Cubit<MainState> {
       itemCount++;
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) +
-                  int.parse(productMainPrice))
+              int.parse(productMainPrice))
               .toString();
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) +
-                  int.parse(productMainPrice))
+              int.parse(productMainPrice))
               .toString();
       emit(Addition());
     }
@@ -721,11 +721,11 @@ class MainCubit extends Cubit<MainState> {
       itemCount--;
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) -
-                  int.parse(productMainPrice))
+              int.parse(productMainPrice))
               .toString();
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) -
-                  int.parse(productMainPrice))
+              int.parse(productMainPrice))
               .toString();
     }
     emit(Subtraction());
@@ -1006,9 +1006,11 @@ class MainCubit extends Cubit<MainState> {
   GovernmentModel? selectedGovernment;
   CitiesModel? selectedCity;
 
-  void selectGovernment(GovernmentModel model) {
+  void selectGovernment(BuildContext context , GovernmentModel model) {
     selectedGovernment = model;
-    selectedCity = selectedGovernment!.cities[0];
+    if( MainCubit.get(context).selectedCity == null) {
+      selectedCity = selectedGovernment!.cities[0];
+    }
     sumShipping(governorateID: model.id);
     emit(SelectedGovernmentState());
   }
@@ -1797,8 +1799,8 @@ class MainCubit extends Cubit<MainState> {
           type: e.color != null
               ? 'color'
               : e.size != null
-                  ? 'size'
-                  : null,
+              ? 'size'
+              : null,
           color: e.color,
         ),
       ).toJson());
@@ -1834,7 +1836,7 @@ class MainCubit extends Cubit<MainState> {
           .toString(),
       name: checkoutModel!.data.user.name,
       paymentMethod:
-          checkoutModel!.data.paymentMethod![paymentMethodIndex].id.toString(),
+      checkoutModel!.data.paymentMethod![paymentMethodIndex].id.toString(),
       extraShipping: extraShippingPrice.toString(),
       items: items,
       notes: note,

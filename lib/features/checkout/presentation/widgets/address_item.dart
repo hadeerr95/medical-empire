@@ -34,30 +34,16 @@ class AddressItem extends StatelessWidget {
             ),
             child: Row(
               children: [
-                if (MainCubit.get(context).shippingAddressIndex == index)
-                  CircleAvatar(
-                    backgroundColor: HexColor(green),
-                    radius: 5,
-                  ),
-                if (MainCubit.get(context).shippingAddressIndex != index)
-                  CircleAvatar(
-                    backgroundColor: HexColor(black),
-                    radius: 5,
-                    child: CircleAvatar(
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      radius: 4,
-                    ),
-                  ),
+
                 space15Horizontal,
                 Expanded(
                   child: Text(
                     '${shippingAddressModel.buildingNumber}, ${shippingAddressModel.streetName}, ${shippingAddressModel.shippingAddressCitiesModel.name}, ${shippingAddressModel.shippingAddressGovernmentModel.name}',
                     maxLines: 2,
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: HexColor(secondaryVariantDark),
-                          fontWeight: FontWeight.w400,
-                        ),
+                      color: HexColor(secondaryVariantDark),
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ],
