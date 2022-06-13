@@ -132,16 +132,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) => Row(
                                             children: [
-                                              Checkbox(
-                                                  value: index ==
-                                                      _selectedAddressSubject
-                                                          .value,
-                                                  onChanged: (bool? newValue) {
-                                                    _selectedAddressSubject.sink
-                                                        .add(index);
-                                                    setAddressControllers(
-                                                        index);
-                                                  }),
+
+                                              GestureDetector(
+                                                onTap:(){
+                                                  _selectedAddressSubject.sink
+                                                      .add(index);
+                                                  setAddressControllers(
+                                                      index);
+                                                },
+                                                child: CircleAvatar(
+                                                  backgroundColor: HexColor(secondaryVariantDark),
+                                                  radius: 5,
+                                                  child: CircleAvatar(
+                                                    backgroundColor:
+                                                    index ==
+                                                        _selectedAddressSubject
+                                                            .value?  Colors.green :Theme.of(context).scaffoldBackgroundColor,
+                                                    radius: 4,
+                                                  ),
+                                                ),
+                                              ),
                                               Flexible(
                                                 child: SizedBox(
                                                   width: MediaQuery.of(context)
@@ -336,9 +346,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
     if (formKey.currentState!.validate()) {
       MainCubit.get(context).deleteMyAddress(addressId: addressId);
+
       await MainCubit.get(context).addMyAddress(
         buildingNumber: buildNumberAddressController.text,
-        city: int.parse(cityController.text),
+        city: MainCubit.get(context).selectedCity== null ?
+        int.parse(cityController.text):MainCubit.get(context).selectedCity!.id,
         governorate: int.parse(governorateController.text),
         specialMarker: specialController.text,
         streetName: streetNameController.text,

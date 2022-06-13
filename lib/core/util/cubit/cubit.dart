@@ -1012,8 +1012,11 @@ class MainCubit extends Cubit<MainState> {
   void selectGovernment(GovernmentModel model, {CitiesModel? citiesModel}) {
     selectedGovernment = model;
     selectedCity = citiesModel ?? selectedGovernment!.cities[0];
-    sumShipping(governorateID: model.id);
-    emit(SelectedGovernmentState());
+   if(checkoutModel != null) {
+    print("********* "+selectedCity!.name  + selectedGovernment!.name );;
+     sumShipping(governorateID: model.id,updateShippingAddressesSelected:citiesModel == null );
+   }
+   emit(SelectedGovernmentState());
   }
 
   void selectCity(CitiesModel model) {
@@ -1934,8 +1937,8 @@ class MainCubit extends Cubit<MainState> {
   num overWeightTax = 0;
   String note = "";
 
-  void sumShipping({int governorateID = 0, num? overTax}) {
-    if (checkoutModel!.data.shippingAddresses!.isEmpty) {
+  void sumShipping({int governorateID = 0, num? overTax , bool? updateShippingAddressesSelected}) {
+    if (checkoutModel!.data.shippingAddresses!.isEmpty || (updateShippingAddressesSelected != null && updateShippingAddressesSelected)) {
       for (var governorate in checkoutModel!.data.governorates!) {
         if (governorate.id == governorateID) {
           for (var city in governorate.cities) {
@@ -1952,6 +1955,7 @@ class MainCubit extends Cubit<MainState> {
         }
       }
     } else {
+      print("---------------else -------");
       int cityShippingPrice = checkoutModel!
           .data
           .shippingAddresses![shippingAddressIndex]
@@ -1966,6 +1970,8 @@ class MainCubit extends Cubit<MainState> {
             .governorateShippingPrice
             .price;
         // in case user not have any shipping addresses
+        print("-----------cityShippingPrice == $shippingAddressIndex--------");
+
       } else {
         totalShippingPrice = cityShippingPrice;
       }

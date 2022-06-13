@@ -34,8 +34,6 @@ class AddressItem extends StatelessWidget {
             ),
             child: Row(
               children: [
-
-                space15Horizontal,
                 Expanded(
                   child: Text(
                     '${shippingAddressModel.buildingNumber}, ${shippingAddressModel.streetName}, ${shippingAddressModel.shippingAddressCitiesModel.name}, ${shippingAddressModel.shippingAddressGovernmentModel.name}',
