@@ -731,9 +731,9 @@ class MainCubit extends Cubit<MainState> {
     emit(Subtraction());
   }
 
-  void cartAddition({
+  cartAddition({
     required int id,
-  }) {
+  }) async {
     if (cartMap[id]!.quantity < cartMap[id]!.stock) {
       cartMap[id]!.quantity = cartMap[id]!.quantity + 1;
 
@@ -765,7 +765,8 @@ class MainCubit extends Cubit<MainState> {
       });
     }
 
-    sumSubTotalCart();
+    await sumSubTotalCart();
+    sumShipping();
 
     emit(CartAddition());
   }
@@ -801,7 +802,8 @@ class MainCubit extends Cubit<MainState> {
           .then((value) {
         print('cart inserted !!!');
       });
-      sumSubTotalCart();
+      await sumSubTotalCart();
+      sumShipping();
 
       emit(CartSubtraction());
       return 1;
@@ -812,7 +814,7 @@ class MainCubit extends Cubit<MainState> {
   num subtotalCart = 0;
   num firstTotalCart = 0;
 
-  void sumSubTotalCart() {
+  sumSubTotalCart() async {
     subtotalCart = 0;
 
     cartMap.forEach((key, value) {
