@@ -127,9 +127,9 @@ class MainCubit extends Cubit<MainState> {
         systemOverlayStyle: Platform.isIOS
             ? null
             : const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark,
-        ),
+                statusBarColor: Colors.white,
+                statusBarIconBrightness: Brightness.dark,
+              ),
         backgroundColor: Colors.white,
         elevation: 0.0,
         titleSpacing: 0.0,
@@ -220,9 +220,9 @@ class MainCubit extends Cubit<MainState> {
         systemOverlayStyle: Platform.isIOS
             ? null
             : SystemUiOverlayStyle(
-          statusBarColor: HexColor(scaffoldBackground),
-          statusBarIconBrightness: Brightness.light,
-        ),
+                statusBarColor: HexColor(scaffoldBackground),
+                statusBarIconBrightness: Brightness.light,
+              ),
         backgroundColor: HexColor(scaffoldBackground),
         elevation: 0.0,
         titleSpacing: 0.0,
@@ -674,7 +674,7 @@ class MainCubit extends Cubit<MainState> {
 
   bool itemColorId() {
     return cartMap[productFeedModel!.data.product.color_attributes!
-        .map((e) => e.attribute.id)] !=
+            .map((e) => e.attribute.id)] !=
         storedColorSelected;
   }
 
@@ -704,11 +704,11 @@ class MainCubit extends Cubit<MainState> {
       itemCount++;
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) +
-              int.parse(productMainPrice))
+                  int.parse(productMainPrice))
               .toString();
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) +
-              int.parse(productMainPrice))
+                  int.parse(productMainPrice))
               .toString();
       emit(Addition());
     }
@@ -721,11 +721,11 @@ class MainCubit extends Cubit<MainState> {
       itemCount--;
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) -
-              int.parse(productMainPrice))
+                  int.parse(productMainPrice))
               .toString();
       productFeedModel!.data.product.price =
           (int.parse(productFeedModel!.data.product.price) -
-              int.parse(productMainPrice))
+                  int.parse(productMainPrice))
               .toString();
     }
     emit(Subtraction());
@@ -770,9 +770,9 @@ class MainCubit extends Cubit<MainState> {
     emit(CartAddition());
   }
 
-  void cartSubtraction({
+  Future<int> cartSubtraction({
     required int id,
-  }) {
+  }) async {
     if (cartMap[id]!.quantity > 1) {
       cartMap[id]!.quantity = cartMap[id]!.quantity - 1;
       if (cartListData == null) {
@@ -801,11 +801,12 @@ class MainCubit extends Cubit<MainState> {
           .then((value) {
         print('cart inserted !!!');
       });
+      sumSubTotalCart();
+
+      emit(CartSubtraction());
+      return 1;
     }
-
-    sumSubTotalCart();
-
-    emit(CartSubtraction());
+    return -1;
   }
 
   num subtotalCart = 0;
@@ -1006,17 +1007,16 @@ class MainCubit extends Cubit<MainState> {
   GovernmentModel? selectedGovernment;
   CitiesModel? selectedCity;
 
-  void selectGovernment(GovernmentModel model ,{ CitiesModel? citiesModel}) {
+  void selectGovernment(GovernmentModel model, {CitiesModel? citiesModel}) {
     selectedGovernment = model;
     selectedCity = citiesModel ?? selectedGovernment!.cities[0];
-    if(checkoutModel != null && cartMap.isNotEmpty) {
-      sumShipping(governorateID: model.id);
-    }
+    sumShipping(governorateID: model.id);
     emit(SelectedGovernmentState());
   }
 
   void selectCity(CitiesModel model) {
     selectedCity = model;
+    sumShipping(governorateID: model.governorateId);
     emit(SelectedCityState());
   }
 
@@ -1799,8 +1799,8 @@ class MainCubit extends Cubit<MainState> {
           type: e.color != null
               ? 'color'
               : e.size != null
-              ? 'size'
-              : null,
+                  ? 'size'
+                  : null,
           color: e.color,
         ),
       ).toJson());
@@ -1808,16 +1808,11 @@ class MainCubit extends Cubit<MainState> {
 
     emit(CreateCheckoutLoading());
 
-    var city = "";
     if (checkoutModel == null ||
         checkoutModel!.data.shippingAddresses == null ||
         checkoutModel!.data.shippingAddresses!.isEmpty) {
       await getCheckout();
-    } /*else {
-      city = checkoutModel!.data.shippingAddresses![shippingAddressIndex]
-          .shippingAddressCitiesModel.id
-          .toString();
-    }*/
+    }
     await getCheckout();
     await _repository
         .createCheckout(
@@ -1837,7 +1832,7 @@ class MainCubit extends Cubit<MainState> {
           .toString(),
       name: checkoutModel!.data.user.name,
       paymentMethod:
-      checkoutModel!.data.paymentMethod![paymentMethodIndex].id.toString(),
+          checkoutModel!.data.paymentMethod![paymentMethodIndex].id.toString(),
       extraShipping: extraShippingPrice.toString(),
       items: items,
       notes: note,
@@ -1865,10 +1860,14 @@ class MainCubit extends Cubit<MainState> {
 
   void clearCart() {
     sl<CacheHelper>().clear('cart').then((value) {
-      cartMap = {};
-      print("asdasdsa"+cartMap.toString());
-      cartListData = [];
-      emit(CartClear());
+      sl<CacheHelper>().clear('coupon').then((value) {
+        cartMap = {};
+        couponsModel = null;
+        couponEditingController.text = "";
+        print("asdasdsa" + cartMap.toString());
+        cartListData = [];
+        emit(CartClear());
+      });
     });
   }
 
@@ -1933,11 +1932,21 @@ class MainCubit extends Cubit<MainState> {
   num overWeightTax = 0;
   String note = "";
 
-  void sumShipping({int governorateID = 0}) {
+  void sumShipping({int governorateID = 0, num? overTax}) {
     if (checkoutModel!.data.shippingAddresses!.isEmpty) {
       for (var governorate in checkoutModel!.data.governorates!) {
         if (governorate.id == governorateID) {
-          totalShippingPrice = governorate.governmentShippingPriceModel.price;
+          for (var city in governorate.cities) {
+            if (city.id == selectedCity!.id) {
+              totalShippingPrice = city.shippingPrice?.price ?? 0;
+              print("city $totalShippingPrice");
+              if (totalShippingPrice == 0) {
+                totalShippingPrice =
+                    governorate.governmentShippingPriceModel.price;
+                print("governorate $totalShippingPrice");
+              }
+            }
+          }
         }
       }
     } else {
@@ -1959,44 +1968,18 @@ class MainCubit extends Cubit<MainState> {
         totalShippingPrice = cityShippingPrice;
       }
 
-      // int governmentId = checkoutModel!.data.shippingAddresses[shippingAddressIndex].governate_id;
-      // int cityId = checkoutModel!.data.shippingAddresses[shippingAddressIndex].city_id;
+      // int i = cartMap.values.toList()[0].vendorId;
       //
-      // int cityShippingPrice = checkoutModel!.data.governorates.singleWhere((element) => element.id == governmentId).cities.singleWhere((element) => element.id == cityId).shipping_price;
-      //
-      // if(cityShippingPrice == 0) {
-      //   totalShippingPrice = checkoutModel!.data.governorates.singleWhere((element) => element.id == governmentId).governmentShippingPriceModel.price;
-      // } else {
-      //   totalShippingPrice = cityShippingPrice;
-      // }
-
-      int i = cartMap.values.toList()[0].vendorId;
-
-      cartMap.values.toList().forEach((element) {
-        if (element.vendorId != i) {
-          extraShippingPrice += 10;
-        }
-
-        print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
-      });
-
-      finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
-
-      print(">>>>>>>>>>>>>>>>>>>>$extraShippingPrice");
-      print(">>>>>>>>>>>>>>>>>>>>$totalShippingPrice");
-      print(">>>>>>>>>>>>>>>>>>>>$firstTotalCart");
-      print(">>>>>>>>>>>>>>>>>>>>$finalTotalCart");
-
       // cartMap.values.toList().forEach((element) {
-      //   element.vendorId
+      //   if (element.vendorId != i) {
+      //     extraShippingPrice += 10;
+      //   }
+      //
+      //   print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
       // });
     }
-  }
 
-// sum shipping  ----------------------end
-
-  // calculate Final total cart
-  calculateFinalTotalCart({num? overTax}) {
+    finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
     overWeightTax = 0;
     if (overTax == null) {
       finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;
@@ -2005,7 +1988,13 @@ class MainCubit extends Cubit<MainState> {
       finalTotalCart =
           firstTotalCart + totalShippingPrice + extraShippingPrice + overTax;
     }
+    print(">>>>>>>>>>>>>>>>>>>>$extraShippingPrice");
+    print(">>>>>>>>>>>>>>>>>>>>$totalShippingPrice");
+    print(">>>>>>>>>>>>>>>>>>>>$firstTotalCart");
+    print(">>>>>>>>>>>>>>>>>>>>$finalTotalCart");
   }
+
+// sum shipping  ----------------------end
 
   void updateNote(String orderNote) {
     note = "";

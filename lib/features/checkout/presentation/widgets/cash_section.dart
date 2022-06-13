@@ -167,7 +167,7 @@ class CashSection extends StatelessWidget {
       }
     });
     if (overWeightTax > 0) {
-      MainCubit.get(context).calculateFinalTotalCart(overTax: overWeightTax);
+      MainCubit.get(context).sumShipping(overTax: overWeightTax);
       return Column(
         children: [
           Padding(
@@ -217,7 +217,7 @@ class CashSection extends StatelessWidget {
       }
     });
     if (vendorTax > 0) {
-      MainCubit.get(context).calculateFinalTotalCart(overTax: vendorTax);
+      MainCubit.get(context).sumShipping(overTax: vendorTax);
       return Column(
         children: [
           Padding(

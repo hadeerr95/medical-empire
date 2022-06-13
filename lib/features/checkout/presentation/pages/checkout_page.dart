@@ -49,7 +49,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.initState();
     MainCubit.get(context).getCheckout();
     MainCubit.get(context).getMyAddress();
-    MainCubit.get(context).calculateFinalTotalCart();
     nameController.text = MainCubit.get(context).myAccountModel!.data.name;
     emailController.text = MainCubit.get(context).myAccountModel!.data.email;
     phoneController.text = MainCubit.get(context).myAccountModel!.data.phone;
@@ -58,7 +57,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _quantitySubject.close();
     super.dispose();
   }
@@ -67,9 +65,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return BackScaffold(
       title: appTranslation(context).checkout,
-      scaffoldBackgroundColor: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      scaffoldBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocConsumer<MainCubit, MainState>(
         listener: (context, state) {
           if (state is AddAddressSuccessState) {
@@ -89,9 +85,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         },
         builder: (context, state) {
           return BuildCondition(
-            condition: MainCubit
-                .get(context)
-                .checkoutModel != null,
+            condition: MainCubit.get(context).checkoutModel != null,
             builder: (context) {
               var shippingAddress =
                   MainCubit.get(context).checkoutModel!.data.shippingAddresses;
@@ -99,12 +93,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
               if (shippingAddress != null) {
                 addresses = shippingAddress.length;
               }
-              if (MainCubit
-                  .get(context)
-                  .checkoutModel!
-                  .data
-                  .shippingAddresses!
-                  .isNotEmpty && isFirstTime) {
+              if (MainCubit.get(context)
+                      .checkoutModel!
+                      .data
+                      .shippingAddresses!
+                      .isNotEmpty &&
+                  isFirstTime) {
                 setAddressControllers(0);
                 isFirstTime = false;
               }
@@ -112,9 +106,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 controller: _scrollController,
                 physics: const BouncingScrollPhysics(),
                 child: Container(
-                  color: Theme
-                      .of(context)
-                      .scaffoldBackgroundColor,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   padding: const EdgeInsets.all(15.0),
                   child: Column(
                     children: [
@@ -123,25 +115,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: shippingAddress == null || addresses == 0
                             ? buildAddressesWidget()
                             : StreamBuilder<int>(
-                            stream: _selectedAddressSubject.stream,
-                            builder: (context, snapshot) {
-                              return Column(
-                                children: [
-                                  SizedBox(
-                                    height: MainCubit
-                                        .get(context)
-                                        .checkoutModel!
-                                        .data
-                                        .shippingAddresses!
-                                        .length * 60,
-                                    child: ListView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) =>
-                                          Row(
+                                stream: _selectedAddressSubject.stream,
+                                builder: (context, snapshot) {
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: MainCubit.get(context)
+                                                .checkoutModel!
+                                                .data
+                                                .shippingAddresses!
+                                                .length *
+                                            60,
+                                        child: ListView.builder(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) => Row(
                                             children: [
-                                              Checkbox(value: index ==
-                                                  _selectedAddressSubject.value,
+                                              Checkbox(
+                                                  value: index ==
+                                                      _selectedAddressSubject
+                                                          .value,
                                                   onChanged: (bool? newValue) {
                                                     _selectedAddressSubject.sink
                                                         .add(index);
@@ -150,35 +144,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                   }),
                                               Flexible(
                                                 child: SizedBox(
-                                                  width: MediaQuery
-                                                      .of(context)
+                                                  width: MediaQuery.of(context)
                                                       .size
                                                       .width,
                                                   child: AddressItem(
                                                     index: index,
                                                     shippingAddressModel: MainCubit
-                                                        .get(context)
-                                                        .checkoutModel!
-                                                        .data
-                                                        .shippingAddresses![index],
+                                                                .get(context)
+                                                            .checkoutModel!
+                                                            .data
+                                                            .shippingAddresses![
+                                                        index],
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
-                                      itemCount: MainCubit
-                                          .get(context)
-                                          .checkoutModel!
-                                          .data
-                                          .shippingAddresses!
-                                          .length,
-                                    ),
-                                  ),
-                                  buildAddressesWidget()
-                                ],
-                              );
-                            }
-                        ),
+                                          itemCount: MainCubit.get(context)
+                                              .checkoutModel!
+                                              .data
+                                              .shippingAddresses!
+                                              .length,
+                                        ),
+                                      ),
+                                      buildAddressesWidget()
+                                    ],
+                                  );
+                                }),
                       ),
                       space15Vertical,
                       BoxItem(
@@ -191,17 +183,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemBuilder: (context, index) =>
-                              PaymentItem(
-                                index: index,
-                                paymentMethodModel: MainCubit
-                                    .get(context)
-                                    .checkoutModel!
-                                    .data
-                                    .paymentMethod![index],
-                              ),
-                          itemCount: MainCubit
-                              .get(context)
+                          itemBuilder: (context, index) => PaymentItem(
+                            index: index,
+                            paymentMethodModel: MainCubit.get(context)
+                                .checkoutModel!
+                                .data
+                                .paymentMethod![index],
+                          ),
+                          itemCount: MainCubit.get(context)
                               .checkoutModel!
                               .data
                               .paymentMethod!
@@ -213,30 +202,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         title: appTranslation(context).products,
                         child: Column(
                           children: [
-                            ...MainCubit
-                                .get(context)
+                            ...MainCubit.get(context)
                                 .cartMap
                                 .map(
-                                  (key, value) =>
-                                  MapEntry(
+                                  (key, value) => MapEntry(
                                     key,
                                     Column(
                                       children: [
                                         Container(
                                           height: 1.0,
-                                          color: Theme
-                                              .of(context)
+                                          color: Theme.of(context)
                                               .scaffoldBackgroundColor,
                                         ),
                                         space15Vertical,
                                         CheckoutProductItem(
                                           cartItem: value,
-                                          quantitySubject: _quantitySubject,
+                                          // quantitySubject: _quantitySubject,
                                         ),
                                       ],
                                     ),
                                   ),
-                            )
+                                )
                                 .values
                                 .toList(),
                           ],
@@ -256,16 +242,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         const Center(child: CupertinoActivityIndicator()),
                       if (state is! CreateCheckoutLoading)
                         MyButton(
-                          voidCallback: () async{
+                          voidCallback: () async {
                             if (shippingAddress == null || addresses == 0) {
                               await saveAddress();
-                            }
-                            else {
-                              updateAddress(MainCubit.get(context).checkoutModel
-                                  !.data.shippingAddresses![_selectedAddressSubject.value].id);
+                            } else {
+                              updateAddress(MainCubit.get(context)
+                                  .checkoutModel!
+                                  .data
+                                  .shippingAddresses![
+                                      _selectedAddressSubject.value]
+                                  .id);
                             }
                             await saveProfileInformation();
-                             MainCubit.get(context).changeShippingAddressIndex(index: _selectedAddressSubject.value);
+                            MainCubit.get(context).changeShippingAddressIndex(
+                                index: _selectedAddressSubject.value);
                           },
                           text: appTranslation(context).completeOrder,
                           color: HexColor(mainColor),
@@ -276,7 +266,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               );
             },
             fallback: (context) =>
-            const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator()),
           );
         },
       ),
@@ -297,11 +287,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             padding: const EdgeInsets.all(20.0),
             child: ShippingAddressForm(
               governmentModel:
-              MainCubit
-                  .get(context)
-                  .addressFeedModel!
-                  .data
-                  .governorates!,
+                  MainCubit.get(context).addressFeedModel!.data.governorates!,
               buildNumberAddressController: buildNumberAddressController,
               cityController: cityController,
               formKey: formKey,
@@ -337,25 +323,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
-   updateAddress(int addressId) async{
+  updateAddress(int addressId) async {
     if (governorateController.text.isEmpty ||
         governorateController.text == '') {
       _scrollController.jumpTo(0);
       governorateController.text =
-          MainCubit
-              .get(context)
-              .selectedGovernment!
-              .id
-              .toString();
+          MainCubit.get(context).selectedGovernment!.id.toString();
     }
     if ((cityController.text.isEmpty || cityController.text == '')) {
       _scrollController.jumpTo(0);
-      cityController.text =
-          MainCubit
-              .get(context)
-              .selectedCity!
-              .id
-              .toString();
+      cityController.text = MainCubit.get(context).selectedCity!.id.toString();
     }
     if (formKey.currentState!.validate()) {
       MainCubit.get(context).deleteMyAddress(addressId: addressId);
@@ -404,34 +381,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void setAddressControllers(int index) {
-    List<Addresses> addresses = MainCubit
-        .get(context)
-        .checkoutModel!
-        .data
-        .shippingAddresses!;
+    List<Addresses> addresses =
+        MainCubit.get(context).checkoutModel!.data.shippingAddresses!;
     buildNumberAddressController.text = addresses[index].buildingNumber;
     specialController.text = addresses[index].specialMarker;
     streetNameController.text = addresses[index].streetName;
-    MainCubit
-        .get(context)
-        .selectedGovernment = MainCubit
-        .get(context)
+    MainCubit.get(context).selectedGovernment = MainCubit.get(context)
         .addressFeedModel!
         .data
         .governorates!
         .firstWhere((element) => element.id == addresses[index].governateId);
-    MainCubit
-        .get(context)
-        .selectedCity = MainCubit
-        .get(context)
+    MainCubit.get(context).selectedCity = MainCubit.get(context)
         .selectedGovernment!
         .cities
         .firstWhere((e) => e.id == addresses[index].cityId);
     governorateController.text = addresses[index].governateId.toString();
     cityController.text = addresses[index].cityId.toString();
 
-    print("------->"+MainCubit
-        .get(context)
-        .selectedCity!.name);
+    print("------->" + MainCubit.get(context).selectedCity!.name);
   }
 }

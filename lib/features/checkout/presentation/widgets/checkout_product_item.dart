@@ -3,15 +3,13 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:medical_empire_app/core/models/cart_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 
 class CheckoutProductItem extends StatelessWidget {
   final CartModel cartItem;
-  final BehaviorSubject<int> quantitySubject;
   const CheckoutProductItem({
     Key? key,
     required this.cartItem,
-    required this.quantitySubject,
   }) : super(key: key);
 
   @override
@@ -56,20 +54,13 @@ class CheckoutProductItem extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      StreamBuilder<int>(
-                          stream: quantitySubject.stream,
-                          builder: (context, snapshot) {
-                            return Text(
-                              '${appTranslation(context).egp} ${int.parse(cartItem.price) * (snapshot.data ?? cartItem.quantity)}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor(mainColor),
-                                  ),
-                            );
-                          }),
+                      Text(
+                        '${appTranslation(context).egp} ${int.parse(cartItem.price) * (cartItem.quantity)}',
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: HexColor(mainColor),
+                            ),
+                      ),
                       space10Vertical,
                       Row(
                         children: [
@@ -84,13 +75,9 @@ class CheckoutProductItem extends StatelessWidget {
                           space3Horizontal,
                           GestureDetector(
                             onTap: () {
-                              if (cartItem.quantity < cartItem.stock) {
-                                cartItem.quantity++;
-                                quantitySubject.sink.add(cartItem.quantity);
-                                MainCubit.get(context).sumSubTotalCart();
-                                MainCubit.get(context)
-                                    .calculateFinalTotalCart();
-                              }
+                              MainCubit.get(context).cartAddition(
+                                id: cartItem.id,
+                              );
                             },
                             child: Container(
                                 decoration: BoxDecoration(
@@ -112,31 +99,23 @@ class CheckoutProductItem extends StatelessWidget {
                                 )),
                           ),
                           space6Horizontal,
-                          StreamBuilder<int>(
-                              stream: quantitySubject.stream,
-                              builder: (context, snapshot) {
-                                return Text(
-                                  snapshot.data == null
-                                      ? '${cartItem.quantity}'
-                                      : '${snapshot.data}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2!
-                                      .copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor(secondaryVariantDark),
-                                      ),
-                                );
-                              }),
+                          Text(
+                            cartItem.quantity.toString(),
+                            style:
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor(secondaryVariantDark),
+                                    ),
+                          ),
                           space6Horizontal,
                           GestureDetector(
-                            onTap: () {
-                              if (cartItem.quantity > 0) {
-                                cartItem.quantity--;
-                                quantitySubject.sink.add(cartItem.quantity);
-                                MainCubit.get(context).sumSubTotalCart();
-                                MainCubit.get(context)
-                                    .calculateFinalTotalCart();
+                            onTap: () async {
+                              int returnedType =
+                                  await MainCubit.get(context).cartSubtraction(
+                                id: cartItem.id,
+                              );
+                              if (returnedType < 0) {
+                                showRemoveDialog(context);
                               }
                             },
                             child: Container(
@@ -170,5 +149,28 @@ class CheckoutProductItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void showRemoveDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return TwoOptionsDialog(
+            pushButtonVoidCallback: () {
+              removeFromCart(
+                context: context,
+                id: cartItem.id,
+              );
+              Navigator.pop(context);
+            },
+            popButtonVoidCallback: () {
+              Navigator.pop(context);
+            },
+            message: appTranslation(context).areYouSureRemoveCart,
+            // title: 'title',
+            pushButtonText: appTranslation(context).remove,
+            popButtonText: appTranslation(context).cancel,
+          );
+        });
   }
 }

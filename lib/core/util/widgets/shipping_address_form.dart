@@ -15,7 +15,6 @@ class ShippingAddressForm extends StatelessWidget {
   final TextEditingController specialController;
   final List<GovernmentModel> governmentModel;
 
-
   final GlobalKey<FormState> formKey;
   const ShippingAddressForm({
     Key? key,
@@ -32,8 +31,9 @@ class ShippingAddressForm extends StatelessWidget {
     return StatefulWrapper(
       onInit: () {
         var selected = MainCubit.get(context).selectedGovernment;
-        if (selected != null ) {
-          selectGovernorate(context, selected,selectedCity:  MainCubit.get(context).selectedCity);
+        if (selected != null) {
+          selectGovernorate(context, selected,
+              selectedCity: MainCubit.get(context).selectedCity);
         }
       },
       child: Form(
@@ -43,8 +43,8 @@ class ShippingAddressForm extends StatelessWidget {
             InputDecorator(
               decoration: InputDecoration(
                 labelStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+                      fontWeight: FontWeight.w700,
+                    ),
                 labelText: appTranslation(context).select_government,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -75,8 +75,8 @@ class ShippingAddressForm extends StatelessWidget {
                     elevation: 0,
                     isDense: false,
                     style: Theme.of(context).textTheme.caption!.copyWith(
-                      color: HexColor(black),
-                    ),
+                          color: HexColor(black),
+                        ),
                     onChanged: (newValue) {
                       selectGovernorate(context, newValue!);
                     },
@@ -84,14 +84,14 @@ class ShippingAddressForm extends StatelessWidget {
                     items: governmentModel
                         .map<DropdownMenuItem<GovernmentModel>>(
                             (GovernmentModel value) {
-                          return DropdownMenuItem<GovernmentModel>(
-                            value: value,
-                            child: Text(
-                              value.name,
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          );
-                        }).toList(),
+                      return DropdownMenuItem<GovernmentModel>(
+                        value: value,
+                        child: Text(
+                          value.name,
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
@@ -100,8 +100,8 @@ class ShippingAddressForm extends StatelessWidget {
             InputDecorator(
               decoration: InputDecoration(
                 labelStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+                      fontWeight: FontWeight.w700,
+                    ),
                 labelText: appTranslation(context).select_city,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -130,8 +130,8 @@ class ShippingAddressForm extends StatelessWidget {
                     elevation: 0,
                     isDense: false,
                     style: Theme.of(context).textTheme.caption!.copyWith(
-                      color: HexColor(black),
-                    ),
+                          color: HexColor(black),
+                        ),
                     onChanged: (newValue) {
                       MainCubit.get(context).selectCity(newValue!);
                       cityController.text = newValue.id.toString();
@@ -142,14 +142,14 @@ class ShippingAddressForm extends StatelessWidget {
                         .cities
                         .map<DropdownMenuItem<CitiesModel>>(
                             (CitiesModel value) {
-                          return DropdownMenuItem<CitiesModel>(
-                            value: value,
-                            child: Text(
-                              value.name,
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          );
-                        }).toList(),
+                      return DropdownMenuItem<CitiesModel>(
+                        value: value,
+                        child: Text(
+                          value.name,
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
@@ -197,9 +197,10 @@ class ShippingAddressForm extends StatelessWidget {
     );
   }
 
-  void selectGovernorate(BuildContext context, GovernmentModel selected ,{CitiesModel? selectedCity}) {
-    MainCubit.get(context).selectGovernment( selected ,citiesModel: selectedCity);
-    MainCubit.get(context).calculateFinalTotalCart();
+  void selectGovernorate(BuildContext context, GovernmentModel selected,
+      {CitiesModel? selectedCity}) {
+    MainCubit.get(context)
+        .selectGovernment(selected, citiesModel: selectedCity);
     governorateController.text = selected.id.toString();
   }
 }

@@ -163,10 +163,15 @@ class SingleCartItem extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    onPressed: () {
-                                      MainCubit.get(context).cartSubtraction(
+                                    onPressed: () async {
+                                      int returnedType =
+                                          await MainCubit.get(context)
+                                              .cartSubtraction(
                                         id: cartItem.id,
                                       );
+                                      if (returnedType < 0) {
+                                        showRemoveDialog(context);
+                                      }
                                     },
                                     icon: Icon(
                                       FontAwesomeIcons.minus,
@@ -214,26 +219,7 @@ class SingleCartItem extends StatelessWidget {
                                 ),
                                 padding: EdgeInsets.zero,
                                 onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return TwoOptionsDialog(
-                                          pushButtonVoidCallback: () {
-                                            removeFromCart(
-                                              context: context,
-                                              id: cartItem.id,
-                                            );
-                                            Navigator.pop(context);
-                                          },
-                                          popButtonVoidCallback: () {
-                                            Navigator.pop(context);
-                                          },
-                                          message: appTranslation(context).areYouSureRemoveCart,
-                                          // title: 'title',
-                                          pushButtonText: appTranslation(context).remove,
-                                          popButtonText: appTranslation(context).cancel,
-                                        );
-                                      });
+                                  showRemoveDialog(context);
                                 },
                               ),
                             ),
@@ -259,5 +245,28 @@ class SingleCartItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showRemoveDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return TwoOptionsDialog(
+            pushButtonVoidCallback: () {
+              removeFromCart(
+                context: context,
+                id: cartItem.id,
+              );
+              Navigator.pop(context);
+            },
+            popButtonVoidCallback: () {
+              Navigator.pop(context);
+            },
+            message: appTranslation(context).areYouSureRemoveCart,
+            // title: 'title',
+            pushButtonText: appTranslation(context).remove,
+            popButtonText: appTranslation(context).cancel,
+          );
+        });
   }
 }

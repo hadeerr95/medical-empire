@@ -319,6 +319,8 @@ class CitiesModel {
     governorateId = json['governorate_id'];
     if (json['shipping_price'] != null) {
       shippingPrice = ShippingPrice.fromJson(json['shipping_price']);
+    }else {
+      shippingPrice = null;
     }
   }
 
