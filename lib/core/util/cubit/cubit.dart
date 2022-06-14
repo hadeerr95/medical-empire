@@ -731,19 +731,18 @@ class MainCubit extends Cubit<MainState> {
     emit(Subtraction());
   }
 
-  cartAddition({
+  Future<int?> cartAddition({
     required int id,
   }) async {
     if (cartMap[id]!.quantity < cartMap[id]!.stock) {
       cartMap[id]!.quantity = cartMap[id]!.quantity + 1;
-
+      print("item in Stock ${cartMap[id]!.stock}");
       if (cartListData == null) {
-        sl<CacheHelper>().get('cart').then((value) {
-          print('cart ---------------------------- $value');
-          if (value != null) {
-            cartListData = MainCartModel.fromJson(value).data;
-          }
-        });
+      var value = await  sl<CacheHelper>().get('cart');
+      print('cart ---------------------------- $value');
+      if (value != null) {
+        cartListData = MainCartModel.fromJson(value).data;
+      }
       }
       for (int i = 0; i < cartListData!.length; i++) {
         if (cartListData![i].id == id) {
@@ -763,12 +762,16 @@ class MainCubit extends Cubit<MainState> {
           .then((value) {
         print('cart inserted !!!');
       });
+      await sumSubTotalCart();
+      sumShipping();
+
+      emit(CartAddition());
+      return null;
+    }else {
+      return cartMap[id]!.stock;
     }
 
-    await sumSubTotalCart();
-    sumShipping();
 
-    emit(CartAddition());
   }
 
   Future<int> cartSubtraction({

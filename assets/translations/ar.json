@@ -26,6 +26,8 @@
   "change_password": "تغيير كلمة المرور",
   "address_billing": "عنوان الفواتير",
   "address_shipping": "عنوان الشحن",
+  "cartAdditionMessage": "هذا المنتج يحتوي فقط علي ",
+  "inStock": " في المخزن",
   "name": "الأسم",
   "address": "عنوان",
   "mobile_phone": "هاتف محمول",
