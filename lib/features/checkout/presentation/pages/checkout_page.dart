@@ -132,22 +132,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) => Row(
                                             children: [
-
                                               GestureDetector(
-                                                onTap:(){
+                                                onTap: () {
                                                   _selectedAddressSubject.sink
                                                       .add(index);
-                                                  setAddressControllers(
-                                                      index);
+                                                  setAddressControllers(index);
                                                 },
                                                 child: CircleAvatar(
-                                                  backgroundColor: HexColor(secondaryVariantDark),
+                                                  backgroundColor: HexColor(
+                                                      secondaryVariantDark),
                                                   radius: 5,
                                                   child: CircleAvatar(
-                                                    backgroundColor:
-                                                    index ==
-                                                        _selectedAddressSubject
-                                                            .value?  Colors.green :Theme.of(context).scaffoldBackgroundColor,
+                                                    backgroundColor: index ==
+                                                            _selectedAddressSubject
+                                                                .value
+                                                        ? Colors.green
+                                                        : Theme.of(context)
+                                                            .scaffoldBackgroundColor,
                                                     radius: 4,
                                                   ),
                                                 ),
@@ -284,30 +285,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   buildAddressesWidget() {
-    return BlocConsumer<MainCubit, MainState>(
-      listener: (BuildContext context, state) {
-        if (state is AddAddressSuccessState) {
-          showToast(message: state.message, toastStates: ToastStates.SUCCESS);
-        }
-      },
-      builder: (BuildContext context, state) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: ShippingAddressForm(
-              governmentModel:
-                  MainCubit.get(context).addressFeedModel!.data.governorates!,
-              buildNumberAddressController: buildNumberAddressController,
-              cityController: cityController,
-              formKey: formKey,
-              governorateController: governorateController,
-              specialController: specialController,
-              streetNameController: streetNameController,
-            ),
-          ),
-        );
-      },
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ShippingAddressForm(
+          governmentModel:
+              MainCubit.get(context).addressFeedModel!.data.governorates!,
+          buildNumberAddressController: buildNumberAddressController,
+          cityController: cityController,
+          formKey: formKey,
+          governorateController: governorateController,
+          specialController: specialController,
+          streetNameController: streetNameController,
+        ),
+      ),
     );
   }
 
@@ -349,8 +341,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
       await MainCubit.get(context).addMyAddress(
         buildingNumber: buildNumberAddressController.text,
-        city: MainCubit.get(context).selectedCity== null ?
-        int.parse(cityController.text):MainCubit.get(context).selectedCity!.id,
+        city: MainCubit.get(context).selectedCity == null
+            ? int.parse(cityController.text)
+            : MainCubit.get(context).selectedCity!.id,
         governorate: int.parse(governorateController.text),
         specialMarker: specialController.text,
         streetName: streetNameController.text,

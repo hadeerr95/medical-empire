@@ -878,6 +878,12 @@ class MainCubit extends Cubit<MainState> {
 
   void removeFromCartMap(int id) {
     cartMap.removeWhere((key, value) => key == id);
+    if (cartMap.isEmpty) {
+      sl<CacheHelper>().clear('coupon').then((value) {
+        couponsModel = null;
+        couponEditingController.text = "";
+      });
+    }
     sumSubTotalCart();
     emit(RemoveFromCartMapState());
   }
@@ -1012,11 +1018,14 @@ class MainCubit extends Cubit<MainState> {
   void selectGovernment(GovernmentModel model, {CitiesModel? citiesModel}) {
     selectedGovernment = model;
     selectedCity = citiesModel ?? selectedGovernment!.cities[0];
-   if(checkoutModel != null) {
-    print("********* "+selectedCity!.name  + selectedGovernment!.name );;
-     sumShipping(governorateID: model.id,updateShippingAddressesSelected:citiesModel == null );
-   }
-   emit(SelectedGovernmentState());
+    if (checkoutModel != null) {
+      print("********* " + selectedCity!.name + selectedGovernment!.name);
+      ;
+      sumShipping(
+          governorateID: model.id,
+          updateShippingAddressesSelected: citiesModel == null);
+    }
+    emit(SelectedGovernmentState());
   }
 
   void selectCity(CitiesModel model) {
@@ -1937,8 +1946,13 @@ class MainCubit extends Cubit<MainState> {
   num overWeightTax = 0;
   String note = "";
 
-  void sumShipping({int governorateID = 0, num? overTax , bool? updateShippingAddressesSelected}) {
-    if (checkoutModel!.data.shippingAddresses!.isEmpty || (updateShippingAddressesSelected != null && updateShippingAddressesSelected)) {
+  void sumShipping(
+      {int governorateID = 0,
+      num? overTax,
+      bool? updateShippingAddressesSelected}) {
+    if (checkoutModel!.data.shippingAddresses!.isEmpty ||
+        (updateShippingAddressesSelected != null &&
+            updateShippingAddressesSelected)) {
       for (var governorate in checkoutModel!.data.governorates!) {
         if (governorate.id == governorateID) {
           for (var city in governorate.cities) {
@@ -1971,7 +1985,6 @@ class MainCubit extends Cubit<MainState> {
             .price;
         // in case user not have any shipping addresses
         print("-----------cityShippingPrice == $shippingAddressIndex--------");
-
       } else {
         totalShippingPrice = cityShippingPrice;
       }

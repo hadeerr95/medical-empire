@@ -43,7 +43,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() {
-    MainCubit.get(context).pageController.dispose();
+    if (MainCubit.get(context).pageController.hasClients) {
+      MainCubit.get(context).pageController.dispose();
+    }
     super.dispose();
   }
 
@@ -69,14 +71,16 @@ class _MainPageState extends State<MainPage> {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      if(MainCubit.get(context).userSigned){
+                      if (MainCubit.get(context).userSigned) {
                         MainCubit.get(context).getNotification();
                         navigateTo(context, const NotificationScreen());
-                      }else{
-                        showToast(toastStates: ToastStates.WARNING, message: appTranslation(context).please_login_to_get_notifications);
+                      } else {
+                        showToast(
+                            toastStates: ToastStates.WARNING,
+                            message: appTranslation(context)
+                                .please_login_to_get_notifications);
                         navigateTo(context, LoginPage());
                       }
-
                     },
                     icon: const MyThemeIcon(
                       path: 'notification',
@@ -390,9 +394,9 @@ class _MainPageState extends State<MainPage> {
                         icon: Stack(
                           alignment: AlignmentDirectional.topEnd,
                           children: [
-
                             Padding(
-                              padding: const EdgeInsetsDirectional.only(top: 10.0, start: 6.0, end: 6.0),
+                              padding: const EdgeInsetsDirectional.only(
+                                  top: 10.0, start: 6.0, end: 6.0),
                               child: AssetSvg(
                                 color: MainCubit.get(context).currentIndex == 2
                                     ? HexColor(mainColor)
@@ -407,16 +411,16 @@ class _MainPageState extends State<MainPage> {
                                 MainCubit.get(context).cartMap.length > 9
                                     ? '+9'
                                     : MainCubit.get(context)
-                                    .cartMap
-                                    .length
-                                    .toString(),
+                                        .cartMap
+                                        .length
+                                        .toString(),
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context)
                                     .textTheme
                                     .caption!
                                     .copyWith(
-                                  color: HexColor(white),
-                                ),
+                                      color: HexColor(white),
+                                    ),
                               ),
                             ),
                           ],
