@@ -165,6 +165,8 @@
   "yourComment": "Add Your Comment (optional)",
   "overWeightTax": "Over Weight Tax",
   "vendorTax": "Vendor Tax",
+  "cartAdditionMessage": "This item just has ",
+  "inStock": " in stock",
   "couponEmpty": "Enter the discount coupon first please!",
   "couponSentBefore": "You have used the discount code before"
 }

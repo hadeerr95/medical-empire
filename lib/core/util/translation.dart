@@ -102,6 +102,8 @@ class TranslationModel {
   late String privacy_policies;
   late String remove_from_cart;
   late String remove;
+  late String inStock;
+  late String cartAdditionMessage;
 
   late String checkout;
   late String products;
@@ -252,6 +254,8 @@ class TranslationModel {
     address_shipping = json['address_shipping'];
 
     name = json['name'];
+    cartAdditionMessage = json['cartAdditionMessage'];
+    inStock = json['inStock'];
     address = json['address'];
     mobile_phone = json['mobile_phone'];
 
