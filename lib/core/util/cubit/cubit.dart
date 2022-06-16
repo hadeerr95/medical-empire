@@ -737,12 +737,10 @@ class MainCubit extends Cubit<MainState> {
     if (cartMap[id]!.quantity < cartMap[id]!.stock) {
       cartMap[id]!.quantity = cartMap[id]!.quantity + 1;
       print("item in Stock ${cartMap[id]!.stock}");
-      if (cartListData == null) {
-      var value = await  sl<CacheHelper>().get('cart');
+      var value = await sl<CacheHelper>().get('cart');
       print('cart ---------------------------- $value');
       if (value != null) {
         cartListData = MainCartModel.fromJson(value).data;
-      }
       }
       for (int i = 0; i < cartListData!.length; i++) {
         if (cartListData![i].id == id) {
@@ -767,11 +765,9 @@ class MainCubit extends Cubit<MainState> {
 
       emit(CartAddition());
       return null;
-    }else {
+    } else {
       return cartMap[id]!.stock;
     }
-
-
   }
 
   Future<int> cartSubtraction({
@@ -779,13 +775,10 @@ class MainCubit extends Cubit<MainState> {
   }) async {
     if (cartMap[id]!.quantity > 1) {
       cartMap[id]!.quantity = cartMap[id]!.quantity - 1;
-      if (cartListData == null) {
-        sl<CacheHelper>().get('cart').then((value) {
-          print('cart ---------------------------- $value');
-          if (value != null) {
-            cartListData = MainCartModel.fromJson(value).data;
-          }
-        });
+      var value = await sl<CacheHelper>().get('cart');
+      print('cart ---------------------------- $value');
+      if (value != null) {
+        cartListData = MainCartModel.fromJson(value).data;
       }
       for (int i = 0; i < cartListData!.length; i++) {
         if (cartListData![i].id == id) {
@@ -1953,54 +1946,57 @@ class MainCubit extends Cubit<MainState> {
       {int governorateID = 0,
       num? overTax,
       bool? updateShippingAddressesSelected}) {
-    if (checkoutModel!.data.shippingAddresses!.isEmpty ||
-        (updateShippingAddressesSelected != null &&
-            updateShippingAddressesSelected)) {
-      for (var governorate in checkoutModel!.data.governorates!) {
-        if (governorate.id == governorateID) {
-          for (var city in governorate.cities) {
-            if (city.id == selectedCity!.id) {
-              totalShippingPrice = city.shippingPrice?.price ?? 0;
-              print("city $totalShippingPrice");
-              if (totalShippingPrice == 0) {
-                totalShippingPrice =
-                    governorate.governmentShippingPriceModel.price;
-                print("governorate $totalShippingPrice");
+    if (checkoutModel != null) {
+      if (checkoutModel!.data.shippingAddresses!.isEmpty ||
+          (updateShippingAddressesSelected != null &&
+              updateShippingAddressesSelected)) {
+        for (var governorate in checkoutModel!.data.governorates!) {
+          if (governorate.id == governorateID) {
+            for (var city in governorate.cities) {
+              if (city.id == selectedCity!.id) {
+                totalShippingPrice = city.shippingPrice?.price ?? 0;
+                print("city $totalShippingPrice");
+                if (totalShippingPrice == 0) {
+                  totalShippingPrice =
+                      governorate.governmentShippingPriceModel.price;
+                  print("governorate $totalShippingPrice");
+                }
               }
             }
           }
         }
-      }
-    } else {
-      print("---------------else -------");
-      int cityShippingPrice = checkoutModel!
-          .data
-          .shippingAddresses![shippingAddressIndex]
-          .shippingAddressCitiesModel
-          .shipping_price!;
-
-      if (cityShippingPrice == 0) {
-        totalShippingPrice = checkoutModel!
+      } else {
+        print("---------------else -------");
+        int cityShippingPrice = checkoutModel!
             .data
             .shippingAddresses![shippingAddressIndex]
-            .shippingAddressGovernmentModel
-            .governorateShippingPrice
-            .price;
-        // in case user not have any shipping addresses
-        print("-----------cityShippingPrice == $shippingAddressIndex--------");
-      } else {
-        totalShippingPrice = cityShippingPrice;
-      }
+            .shippingAddressCitiesModel
+            .shipping_price!;
 
-      // int i = cartMap.values.toList()[0].vendorId;
-      //
-      // cartMap.values.toList().forEach((element) {
-      //   if (element.vendorId != i) {
-      //     extraShippingPrice += 10;
-      //   }
-      //
-      //   print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
-      // });
+        if (cityShippingPrice == 0) {
+          totalShippingPrice = checkoutModel!
+              .data
+              .shippingAddresses![shippingAddressIndex]
+              .shippingAddressGovernmentModel
+              .governorateShippingPrice
+              .price;
+          // in case user not have any shipping addresses
+          print(
+              "-----------cityShippingPrice == $shippingAddressIndex--------");
+        } else {
+          totalShippingPrice = cityShippingPrice;
+        }
+
+        // int i = cartMap.values.toList()[0].vendorId;
+        //
+        // cartMap.values.toList().forEach((element) {
+        //   if (element.vendorId != i) {
+        //     extraShippingPrice += 10;
+        //   }
+        //
+        //   print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
+        // });
+      }
     }
 
     finalTotalCart = firstTotalCart + totalShippingPrice + extraShippingPrice;

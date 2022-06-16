@@ -5,12 +5,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:medical_empire_app/core/models/product_details_model.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/cubit/state.dart';
-import 'package:medical_empire_app/core/util/widgets/dialog_button.dart';
 import 'package:medical_empire_app/core/util/widgets/my_button.dart';
 import 'package:medical_empire_app/core/util/widgets/one_option_dialog.dart';
 import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 import 'package:medical_empire_app/features/login/presentation/pages/login_page.dart';
 
+import '../../../features/product_details/presentation/page/product_details_page.dart';
 import '../constants.dart';
 import 'asset_svg.dart';
 
@@ -125,24 +125,29 @@ class _CartButtonState extends State<CartButton> {
                           ? HexColor(secondBackground)
                           : HexColor(darkWhite),
                       child: InkWell(
-                        onTap: () async{
-                          int? stockRestriction = await MainCubit.get(context).cartAddition(
+                        onTap: () async {
+                          int? stockRestriction =
+                              await MainCubit.get(context).cartAddition(
                             id: widget.product.id,
                           );
-                          if(stockRestriction== null)
-                         { setState(() {
-                            count++;
-                          });
-                         }
-                          else {
+                          if (stockRestriction == null) {
+                            setState(() {
+                              count++;
+                            });
+                          } else {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return OneOptionDialog(
-                                    message: appTranslation(context).cartAdditionMessage + stockRestriction.toString() + appTranslation(context).inStock,
+                                    message: appTranslation(context)
+                                            .cartAdditionMessage +
+                                        stockRestriction.toString() +
+                                        appTranslation(context).inStock,
                                     popButtonVoidCallback: () {
                                       Navigator.pop(context);
-                                    }, popButtonText: appTranslation(context).cancel,
+                                    },
+                                    popButtonText:
+                                        appTranslation(context).cancel,
                                     // title: 'title',
                                   );
                                 });
@@ -209,6 +214,7 @@ class _CartButtonState extends State<CartButton> {
                         } else if (widget.product.color_attributes != null &&
                             widget.product.size_attributes == null) {
                           if (MainCubit.get(context).currentColor < 0) {
+                            navigateToProductDetailsScreen(context);
                             showToast(
                                 message:
                                     appTranslation(context).pleaseSelectColor,
@@ -223,6 +229,7 @@ class _CartButtonState extends State<CartButton> {
                         } else if (widget.product.color_attributes == null &&
                             widget.product.size_attributes != null) {
                           if (MainCubit.get(context).currentSize < 0) {
+                            navigateToProductDetailsScreen(context);
                             showToast(
                                 message:
                                     appTranslation(context).pleaseSelectSize,
@@ -236,12 +243,16 @@ class _CartButtonState extends State<CartButton> {
                           }
                         } else {
                           if (MainCubit.get(context).currentSize < 0) {
+                            navigateToProductDetailsScreen(context);
                             showToast(
-                                message: 'please select Size',
+                                message:
+                                    appTranslation(context).pleaseSelectSize,
                                 toastStates: ToastStates.WARNING);
                           } else if (MainCubit.get(context).currentColor < 0) {
+                            navigateToProductDetailsScreen(context);
                             showToast(
-                                message: 'please select Color',
+                                message:
+                                    appTranslation(context).pleaseSelectColor,
                                 toastStates: ToastStates.WARNING);
                           } else {
                             print('yes color yes size');
@@ -284,6 +295,15 @@ class _CartButtonState extends State<CartButton> {
                 ),
               );
       },
+    );
+  }
+
+  void navigateToProductDetailsScreen(BuildContext context) {
+    navigateTo(
+      context,
+      ProductDetailsPage(
+        slug: widget.product.slug.en,
+      ),
     );
   }
 }

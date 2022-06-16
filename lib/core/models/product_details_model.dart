@@ -1,11 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:medical_empire_app/core/network/end_points.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/language_model.dart';
-
-import 'home_feed_model.dart';
 
 class ProductFeedModel {
   final ProductDetailsModel data;
@@ -444,6 +440,7 @@ class ColorModel {
   ColorModel({
     required this.id,
     required this.attribute_id,
+    required this.productID,
     required this.attribute_type_id,
     required this.image,
     required this.price,
@@ -452,6 +449,7 @@ class ColorModel {
 
   late final int id;
   late final int attribute_id;
+  late final int productID;
   late final int attribute_type_id;
   String? image;
   late final num price;
@@ -464,6 +462,10 @@ class ColorModel {
     if (json['attribute_id'] != null) {
       attribute_id = json['attribute_id'];
     }
+    if (json['product_id'] != null) {
+      productID = json['product_id'];
+    }
+
     if (json['attribute_type_id'] != null) {
       attribute_type_id = json['attribute_type_id'];
     }
