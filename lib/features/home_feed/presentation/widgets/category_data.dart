@@ -202,8 +202,7 @@ class CategoryProductHorizontalItem extends StatelessWidget {
                                       color: HexColor(mainColor),
                                     ),
                           ),
-                          if (products.oldPrice != null)
-                            space5Horizontal,
+                          if (products.oldPrice != null) space5Horizontal,
                           if (products.oldPrice != null)
                             Expanded(
                               child: Text(
@@ -223,84 +222,6 @@ class CategoryProductHorizontalItem extends StatelessWidget {
                             ),
                         ],
                       ),
-                      // space3Vertical,
-                      // Text(
-                      //   products.oldPrice != null ? 'EGP ${products.oldPrice}' : '',
-                      //   maxLines: 2,
-                      //   overflow: TextOverflow.ellipsis,
-                      //   style: Theme.of(context).textTheme.caption!.copyWith(
-                      //     decoration: TextDecoration.lineThrough,
-                      //   ),
-                      // ),
-                      // space3Vertical,
-                      // Row(
-                      //   children: [
-                      //     if (products.oldPrice != null)
-                      //       Container(
-                      //         child: Text(
-                      //           'SALE',
-                      //           maxLines: 2,
-                      //           overflow: TextOverflow.ellipsis,
-                      //           style: Theme.of(context)
-                      //               .textTheme
-                      //               .caption!
-                      //               .copyWith(
-                      //             fontWeight: FontWeight.bold,
-                      //             color: HexColor('da7339'),
-                      //           ),
-                      //         ),
-                      //         padding: const EdgeInsets.symmetric(
-                      //           horizontal: 5.0,
-                      //           vertical: 3.0,
-                      //         ),
-                      //         color: HexColor('da7339').withOpacity(
-                      //           .2,
-                      //         ),
-                      //       ),
-                      //     if (products.oldPrice == null)
-                      //       Container(
-                      //         child: Text(
-                      //           '',
-                      //           maxLines: 2,
-                      //           overflow: TextOverflow.ellipsis,
-                      //           style: Theme.of(context)
-                      //               .textTheme
-                      //               .caption!
-                      //               .copyWith(
-                      //             fontWeight: FontWeight.bold,
-                      //             color: HexColor('da7339'),
-                      //           ),
-                      //         ),
-                      //         padding: const EdgeInsets.symmetric(
-                      //           horizontal: 5.0,
-                      //           vertical: 3.0,
-                      //         ),
-                      //       ),
-                      //     // const Spacer(),
-                      //     // Icon(
-                      //     //   Icons.star,
-                      //     //   size: 12.0,
-                      //     //   color: HexColor('da7339'),
-                      //     // ),
-                      //     // Text(
-                      //     //   '4.5',
-                      //     //   maxLines: 2,
-                      //     //   overflow: TextOverflow.ellipsis,
-                      //     //   style:
-                      //     //   Theme.of(context).textTheme.caption!.copyWith(
-                      //     //     fontWeight: FontWeight.bold,
-                      //     //     color: HexColor('da7339'),
-                      //     //   ),
-                      //     // ),
-                      //     // space3Vertical,
-                      //     // Text(
-                      //     //   '(5)',
-                      //     //   maxLines: 2,
-                      //     //   overflow: TextOverflow.ellipsis,
-                      //     //   style: Theme.of(context).textTheme.caption,
-                      //     // ),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),
@@ -317,23 +238,6 @@ class CategoryProductHorizontalItem extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // SizedBox(
-                  //   height: 40.0,
-                  //   width: 40.0,
-                  //   child: IconButton(
-                  //     icon: CircleAvatar(
-                  //       radius: 20.0,
-                  //       backgroundColor: Colors.grey[300],
-                  //       child: const Icon(
-                  //         Icons.favorite_outline,
-                  //         size: 16.0,
-                  //         color: Colors.grey,
-                  //       ),
-                  //     ),
-                  //     padding: EdgeInsets.zero,
-                  //     onPressed: () {},
-                  //   ),
-                  // ),
                   CompareButton(
                     id: products.id,
                   ),
@@ -351,7 +255,10 @@ class CategoryProductHorizontalItem extends StatelessWidget {
                   alignment: AlignmentDirectional.topStart,
                   child: Container(
                     child: Text(
-                      appTranslation(context).sale +" "+ getPercentageOfDiscount(products.oldPrice! , products.price),
+                      appTranslation(context).sale +
+                          " " +
+                          getPercentageOfDiscount(
+                              products.oldPrice!, products.price),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.caption!.copyWith(
@@ -376,228 +283,16 @@ class CategoryProductHorizontalItem extends StatelessWidget {
         ),
       ),
     );
-
-    // return KeepAliveWidget(
-    //   child: GestureDetector(
-    //     onTap: () {
-    //       navigateTo(
-    //         context,
-    //         ProductDetailsPage(
-    //           slug: products.slug.ar,
-    //         ),
-    //       );
-    //     },
-    //     child: SizedBox(
-    //       width: 190.0,
-    //       child: Column(
-    //         children: [
-    //           Container(
-    //             clipBehavior: Clip.antiAliasWithSaveLayer,
-    //             decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(
-    //                 10.0,
-    //               ),
-    //               image: DecorationImage(
-    //                 image: NetworkImage(products.image),
-    //                 fit: BoxFit.cover,
-    //               ),
-    //               border: Border.all(
-    //                 color: Colors.grey[300]!,
-    //                 width: 1.0,
-    //               ),
-    //             ),
-    //             width: double.infinity,
-    //             height: 190.0,
-    //             child: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.end,
-    //               children: [
-    //                 WishListButton(
-    //                   id: products.id,
-    //                 ),
-    //                 const Spacer(),
-    //                 BlocBuilder<MainCubit, MainState>(
-    //                   builder: (context, state) {
-    //                     return IconButton(
-    //                       icon: Container(
-    //                         height: 30.0,
-    //                         width: 30.0,
-    //                         decoration: BoxDecoration(
-    //                           color:
-    //                               MainCubit.get(context).cartMap[products.id] !=
-    //                                       null
-    //                                   ? HexColor(red)
-    //                                   : HexColor(mainColor),
-    //                           borderRadius: BorderRadius.circular(8.0),
-    //                         ),
-    //                         child: Icon(
-    //                           MainCubit.get(context).cartMap[products.id] !=
-    //                                   null
-    //                               ? Icons.remove_shopping_cart_rounded
-    //                               : Icons.add_shopping_cart_rounded,
-    //                           size: 14.0,
-    //                           color: HexColor(surface),
-    //                         ),
-    //                       ),
-    //                       padding: EdgeInsets.zero,
-    //                       onPressed: () {
-    //                         if (MainCubit.get(context).cartMap[products.id] !=
-    //                             null) {
-    //                           removeFromCart(
-    //                             context: context,
-    //                             id: products.id,
-    //                           );
-    //                         } else {
-    //                           addToCart(
-    //                             context: context,
-    //                             productModel: products,
-    //                           );
-    //                           print('test adding to cart-----------');
-    //                         }
-    //                       },
-    //                     );
-    //                   },
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.all(8.0),
-    //             child: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [
-    //                 Text(
-    //                   MainCubit.get(context).isRtl
-    //                       ? products.name.ar
-    //                       : products.name.en,
-    //                   maxLines: 1,
-    //                   overflow: TextOverflow.ellipsis,
-    //                   style: Theme.of(context).textTheme.bodyText2,
-    //                 ),
-    //                 space3Vertical,
-    //                 Row(
-    //                   crossAxisAlignment: CrossAxisAlignment.baseline,
-    //                   textBaseline: TextBaseline.alphabetic,
-    //                   children: [
-    //                     Text(
-    //                       products.price,
-    //                       maxLines: 1,
-    //                       overflow: TextOverflow.ellipsis,
-    //                       style: Theme.of(context).textTheme.subtitle1,
-    //                     ),
-    //                     space3Horizontal,
-    //                     Text(
-    //                       appTranslation(context).egp,
-    //                       maxLines: 1,
-    //                       overflow: TextOverflow.ellipsis,
-    //                       style: Theme.of(context).textTheme.caption,
-    //                     ),
-    //                   ],
-    //                 ),
-    //                 space3Vertical,
-    //                 Text(
-    //                   products.oldPrice ?? '',
-    //                   maxLines: 1,
-    //                   overflow: TextOverflow.ellipsis,
-    //                   style: Theme.of(context).textTheme.caption!.copyWith(
-    //                         decoration: TextDecoration.lineThrough,
-    //                       ),
-    //                 ),
-    //                 // space3Vertical,
-    //                 // Row(
-    //                 //   children: [
-    //                 //     RatingBar.builder(
-    //                 //       ignoreGestures: true,
-    //                 //       tapOnlyMode: true,
-    //                 //       updateOnDrag: false,
-    //                 //       initialRating: 4,
-    //                 //
-    //                 //       // reviews.rating.toDouble(),
-    //                 //       minRating: 1,
-    //                 //       itemSize: 12.0,
-    //                 //       direction: Axis.horizontal,
-    //                 //       allowHalfRating: true,
-    //                 //       itemCount: 5,
-    //                 //       itemPadding:
-    //                 //           const EdgeInsets.symmetric(horizontal: 1.0),
-    //                 //       itemBuilder: (context, _) => Icon(
-    //                 //         Icons.star,
-    //                 //         color: HexColor(secondColor),
-    //                 //       ),
-    //                 //       onRatingUpdate: (rating) {
-    //                 //         // print(rating);
-    //                 //       },
-    //                 //     ),
-    //                 //     space3Horizontal,
-    //                 //     Text(
-    //                 //       '(0)',
-    //                 //       maxLines: 2,
-    //                 //       overflow: TextOverflow.ellipsis,
-    //                 //       style: Theme.of(context).textTheme.caption,
-    //                 //     ),
-    //                 //   ],
-    //                 // ),
-    //
-    //                 // Row(
-    //                 //   children: [
-    //                 //     Container(
-    //                 //       child: Text(
-    //                 //         '10% OFF',
-    //                 //         maxLines: 2,
-    //                 //         overflow: TextOverflow.ellipsis,
-    //                 //         style: Theme.of(context).textTheme.caption!.copyWith(
-    //                 //               fontWeight: FontWeight.bold,
-    //                 //               color: HexColor(secondColor),
-    //                 //             ),
-    //                 //       ),
-    //                 //       padding: const EdgeInsets.symmetric(
-    //                 //         horizontal: 5.0,
-    //                 //         vertical: 3.0,
-    //                 //       ),
-    //                 //       color: HexColor(secondColor).withOpacity(
-    //                 //         .2,
-    //                 //       ),
-    //                 //     ),
-    //                 //     const Spacer(),
-    //                 //     Icon(
-    //                 //       Icons.star,
-    //                 //       size: 12.0,
-    //                 //       color: HexColor(secondColor),
-    //                 //     ),
-    //                 //     Text(
-    //                 //       '4.8',
-    //                 //       maxLines: 2,
-    //                 //       overflow: TextOverflow.ellipsis,
-    //                 //       style: Theme.of(context).textTheme.caption!.copyWith(
-    //                 //             fontWeight: FontWeight.bold,
-    //                 //             color: HexColor(secondColor),
-    //                 //           ),
-    //                 //     ),
-    //                 //     space3Horizontal,
-    //                 //     Text(
-    //                 //       '(${products.quantityInStock})',
-    //                 //       maxLines: 2,
-    //                 //       overflow: TextOverflow.ellipsis,
-    //                 //       style: Theme.of(context).textTheme.caption,
-    //                 //     ),
-    //                 //   ],
-    //                 // ),
-    //               ],
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   String getPercentageOfDiscount(String oldPrice, String price) {
     num oldPriceNum = num.parse(oldPrice);
     num priceNum = num.parse(price);
-    num result   = (oldPriceNum - priceNum) / oldPriceNum ;
-    return dp(result.toDouble(),2).toString()+"%";
+    num result = (oldPriceNum - priceNum) / oldPriceNum;
+    return dp(result.toDouble(), 2).toString() + "%";
   }
-  double dp(double val, int places){
+
+  double dp(double val, int places) {
     num mod = pow(10.0, places);
     return ((val * mod).round().toDouble() / mod);
   }

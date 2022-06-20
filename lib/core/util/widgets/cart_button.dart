@@ -171,6 +171,7 @@ class _CartButtonState extends State<CartButton> {
                 ),
               )
             : MyButton(
+                isEnabled: widget.product.quantityInStock != 0,
                 voidCallback: () {
                   if (MainCubit.get(context).userSigned) {
                     if (MainCubit.get(context).cartMap[widget.product.id] !=
@@ -282,12 +283,16 @@ class _CartButtonState extends State<CartButton> {
                     navigateTo(context, LoginPage());
                   }
                 },
-                text: MainCubit.get(context).cartMap[widget.product.id] != null
-                    ? appTranslation(context).remove_from_cart
-                    : appTranslation(context).addToCart,
-                color: MainCubit.get(context).cartMap[widget.product.id] != null
-                    ? HexColor(red)
-                    : HexColor(mainColor),
+                text: widget.product.quantityInStock == 0
+                    ? appTranslation(context).out_of_stock
+                    : MainCubit.get(context).cartMap[widget.product.id] != null
+                        ? appTranslation(context).remove_from_cart
+                        : appTranslation(context).addToCart,
+                color: widget.product.quantityInStock == 0
+                    ? HexColor(grey)
+                    : MainCubit.get(context).cartMap[widget.product.id] != null
+                        ? HexColor(red)
+                        : HexColor(mainColor),
                 radius: 30,
                 iconBehindText: AssetSvg(
                   imagePath: 'add_cart',

@@ -13,6 +13,7 @@ class MyButton extends StatelessWidget {
   FontWeight fontWeight;
   double fontsize;
   Widget? iconBehindText;
+  bool isEnabled;
 
   MyButton({
     Key? key,
@@ -25,6 +26,7 @@ class MyButton extends StatelessWidget {
     this.fontWeight = FontWeight.bold,
     this.fontsize = 14.0,
     this.iconBehindText,
+    this.isEnabled = true,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class MyButton extends StatelessWidget {
       width: double.infinity,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: MaterialButton(
-        onPressed: voidCallback,
+        onPressed: isEnabled ? voidCallback : null,
         child: iconBehindText == null
             ? Text(
                 text,
@@ -49,15 +51,17 @@ class MyButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      text,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color: textColor,
-                            fontSize: fontsize,
-                          ),
+                    Expanded(
+                      child: Text(
+                        text,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              color: textColor,
+                              fontSize: fontsize,
+                            ),
+                      ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.only(start: 20),
+                      padding: const EdgeInsetsDirectional.only(start: 20),
                       child: iconBehindText,
                     )
                   ],

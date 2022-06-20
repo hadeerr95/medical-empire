@@ -710,6 +710,7 @@ class MainCubit extends Cubit<MainState> {
           (int.parse(productFeedModel!.data.product.price) +
                   int.parse(productMainPrice))
               .toString();
+      cartMap[productFeedModel!.data.product.id]?.quantity += 1;
       emit(Addition());
     }
   }
@@ -727,6 +728,7 @@ class MainCubit extends Cubit<MainState> {
           (int.parse(productFeedModel!.data.product.price) -
                   int.parse(productMainPrice))
               .toString();
+      cartMap[productFeedModel!.data.product.id]?.quantity -= 1;
     }
     emit(Subtraction());
   }
@@ -736,7 +738,7 @@ class MainCubit extends Cubit<MainState> {
   }) async {
     if (cartMap[id]!.quantity < cartMap[id]!.stock) {
       cartMap[id]!.quantity = cartMap[id]!.quantity + 1;
-      print("item in Stock ${cartMap[id]!.stock}");
+
       var value = await sl<CacheHelper>().get('cart');
       print('cart ---------------------------- $value');
       if (value != null) {
@@ -1016,7 +1018,6 @@ class MainCubit extends Cubit<MainState> {
     selectedCity = citiesModel ?? selectedGovernment!.cities[0];
     if (checkoutModel != null) {
       print("********* " + selectedCity!.name + selectedGovernment!.name);
-      ;
       sumShipping(
           governorateID: model.id,
           updateShippingAddressesSelected: citiesModel == null);
@@ -1026,7 +1027,12 @@ class MainCubit extends Cubit<MainState> {
 
   void selectCity(CitiesModel model) {
     selectedCity = model;
-    sumShipping(governorateID: model.governorateId);
+    if (checkoutModel != null) {
+      print("********* " + selectedCity!.name + selectedGovernment!.name);
+      sumShipping(
+          governorateID: model.governorateId,
+          updateShippingAddressesSelected: true);
+    }
     emit(SelectedCityState());
   }
 

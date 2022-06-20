@@ -3,7 +3,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:medical_empire_app/core/models/cart_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
-import 'package:medical_empire_app/core/util/widgets/dialog_button.dart';
 import 'package:medical_empire_app/core/util/widgets/one_option_dialog.dart';
 import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 
@@ -40,7 +39,7 @@ class CheckoutProductItem extends StatelessWidget {
           space10Horizontal,
           Expanded(
             child: SizedBox(
-              height: 135.0,
+              height: 150,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,10 +55,36 @@ class CheckoutProductItem extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            cartItem.price,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                Theme.of(context).textTheme.headline6!.copyWith(
+                                      color: HexColor(mainColor),
+                                    ),
+                          ),
+                          space3Horizontal,
+                          Text(
+                            appTranslation(context).egp,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
+                                      color: HexColor(mainColor),
+                                    ),
+                          ),
+                        ],
+                      ),
                       Text(
-                        '${appTranslation(context).egp} ${int.parse(cartItem.price) * (cartItem.quantity)}',
+                        '${appTranslation(context).total} : ${(double.parse(cartItem.price) * cartItem.quantity).toInt()} ${appTranslation(context).egp}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              fontWeight: FontWeight.w700,
                               color: HexColor(mainColor),
                             ),
                       ),
@@ -76,23 +101,28 @@ class CheckoutProductItem extends StatelessWidget {
                           ),
                           space3Horizontal,
                           GestureDetector(
-                            onTap: () async{
-                              int? stockRestriction = await MainCubit.get(context).cartAddition(
+                            onTap: () async {
+                              int? stockRestriction =
+                                  await MainCubit.get(context).cartAddition(
                                 id: cartItem.id,
                               );
-                              if(stockRestriction!= null)
-                               {
-                                 showDialog(
-                                     context: context,
-                                     builder: (BuildContext context) {
-                                       return OneOptionDialog(
-                                         message: appTranslation(context).cartAdditionMessage + stockRestriction.toString() + appTranslation(context).inStock,
-                                         popButtonVoidCallback: () {
-                                           Navigator.pop(context);
-                                         }, popButtonText: appTranslation(context).cancel,
-                                         // title: 'title',
-                                       );
-                                     });
+                              if (stockRestriction != null) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return OneOptionDialog(
+                                        message: appTranslation(context)
+                                                .cartAdditionMessage +
+                                            stockRestriction.toString() +
+                                            appTranslation(context).inStock,
+                                        popButtonVoidCallback: () {
+                                          Navigator.pop(context);
+                                        },
+                                        popButtonText:
+                                            appTranslation(context).cancel,
+                                        // title: 'title',
+                                      );
+                                    });
                               }
                             },
                             child: Container(
@@ -154,10 +184,10 @@ class CheckoutProductItem extends StatelessWidget {
                                 )),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
-                  const Spacer(),
+                  space10Vertical
                 ],
               ),
             ),

@@ -256,7 +256,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           voidCallback: () async {
                             if (shippingAddress == null || addresses == 0) {
                               await saveAddress();
-                            } else {
+                            } /*else {
                               updateAddress(MainCubit.get(context)
                                   .checkoutModel!
                                   .data
@@ -264,7 +264,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       _selectedAddressSubject.value]
                                   .id);
                             }
-                            await saveProfileInformation();
+                            await saveProfileInformation();*/
                             MainCubit.get(context).changeShippingAddressIndex(
                                 index: _selectedAddressSubject.value);
                           },
@@ -291,7 +291,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         padding: const EdgeInsets.all(20.0),
         child: ShippingAddressForm(
           governmentModel:
-              MainCubit.get(context).addressFeedModel!.data.governorates!,
+              MainCubit.get(context).addressFeedModel?.data.governorates ?? [],
           buildNumberAddressController: buildNumberAddressController,
           cityController: cityController,
           formKey: formKey,
@@ -361,12 +361,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  saveProfileInformation() async {
+  /* saveProfileInformation() async {
     await MainCubit.get(context).updateAccount(
         name: nameController.text,
         email: emailController.text,
         phone: phoneController.text);
-  }
+  }*/
 
   notesWidget() {
     return Padding(
