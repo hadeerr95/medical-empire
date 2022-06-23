@@ -12,9 +12,9 @@ class UserModel {
   });
 
   late final int id;
-  late final String name;
-  late final String email;
-  late final String phone;
+  late  String name;
+  late  String email;
+  late  String phone;
   late final String image;
   List<Addresses>? addresses;
 

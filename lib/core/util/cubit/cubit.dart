@@ -1829,7 +1829,6 @@ class MainCubit extends Cubit<MainState> {
         checkoutModel!.data.shippingAddresses!.isEmpty) {
       await getCheckout();
     }
-    await getCheckout();
     await _repository
         .createCheckout(
       city: checkoutModel!.data.shippingAddresses![shippingAddressIndex]

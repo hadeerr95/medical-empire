@@ -104,15 +104,15 @@ class Addresses {
     required this.shippingAddressCitiesModel,
   });
 
-  late final int id;
-  late final int userId;
-  late final int governateId;
-  late final int cityId;
-  late final String streetName;
-  late final String buildingNumber;
-  late final String specialMarker;
-  late final ShippingAddressGovernmentModel shippingAddressGovernmentModel;
-  late final ShippingAddressCitiesModel shippingAddressCitiesModel;
+  late  int id;
+  late  int userId;
+  late  int governateId;
+  late  int cityId;
+  late  String streetName;
+  late  String buildingNumber;
+  late  String specialMarker;
+  late  ShippingAddressGovernmentModel shippingAddressGovernmentModel;
+  late  ShippingAddressCitiesModel shippingAddressCitiesModel;
 
   Addresses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -187,7 +187,7 @@ class ShippingAddressGovernmentModel {
     required this.governorateShippingPrice,
   });
 
-  late final int id;
+  late  int id;
   late final String name;
   late final String nameAr;
   late final int countryId;
@@ -222,7 +222,7 @@ class ShippingAddressCitiesModel {
     required this.shipping_price,
   });
 
-  late final int id;
+  late  int id;
   late final String name;
   late final String name_ar;
   late final int governorate_id;

@@ -131,7 +131,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) => Row(
+
                                             children: [
+                                              const SizedBox(width: 16,),
                                               GestureDetector(
                                                 onTap: () {
                                                   _selectedAddressSubject.sink
@@ -255,16 +257,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         MyButton(
                           voidCallback: () async {
                             if (shippingAddress == null || addresses == 0) {
+                              changePersonalInfo();
                               await saveAddress();
-                            } /*else {
+                            } else {/*
                               updateAddress(MainCubit.get(context)
                                   .checkoutModel!
                                   .data
                                   .shippingAddresses![
                                       _selectedAddressSubject.value]
-                                  .id);
+                                  .id);*/
+                              changeAddressData();
+                              MainCubit.get(context).createCheckout();
                             }
-                            await saveProfileInformation();*/
+                            // await saveProfileInformation();
                             MainCubit.get(context).changeShippingAddressIndex(
                                 index: _selectedAddressSubject.value);
                           },
@@ -349,6 +354,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
         streetName: streetNameController.text,
       );
     }
+  }
+  changePersonalInfo(){
+    MainCubit.get(context).checkoutModel!.data.user.email = emailController.text;
+    MainCubit.get(context).checkoutModel!.data.user.phone = phoneController.text;
+    MainCubit.get(context).checkoutModel!.data.user.name = nameController.text;
+
+  }
+  changeAddressData (){
+    MainCubit.get(context).shippingAddressIndex = _selectedAddressSubject.value;
+    Addresses addresses = MainCubit.get(context).checkoutModel!.data.shippingAddresses![_selectedAddressSubject.value];
+
+    addresses.buildingNumber= buildNumberAddressController.text;
+    addresses.shippingAddressCitiesModel.id=  MainCubit.get(context).selectedCity == null
+          ? int.parse(cityController.text)
+          : MainCubit.get(context).selectedCity!.id;
+    addresses.shippingAddressGovernmentModel.id= int.parse(governorateController.text);
+    addresses.specialMarker= specialController.text;
+    addresses.streetName=  streetNameController.text;
+    addresses.shippingAddressCitiesModel=  addresses.shippingAddressCitiesModel;
+    addresses.shippingAddressGovernmentModel= addresses.shippingAddressGovernmentModel;
+    changePersonalInfo();
+    MainCubit.get(context).checkoutModel!.data.shippingAddresses![_selectedAddressSubject.value]= addresses;
+    print("");
   }
 
   buildPersonalInformationWidget() {
