@@ -6,7 +6,7 @@ import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/cubit/state.dart';
 
-class ColorsListItem extends StatelessWidget {
+class ColorsListItem extends StatefulWidget {
   final ColorModel model;
   final int index;
   const ColorsListItem({
@@ -16,11 +16,27 @@ class ColorsListItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => ColorsListItemState();
+}
+
+class ColorsListItemState extends State<ColorsListItem> {
+  late ColorModel model;
+  late int index;
+
+  @override
+  void initState() {
+    model = widget.model;
+    index = widget.index;
+    super.initState();
+    MainCubit.get(context).selectColor(0);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainCubit, MainState>(
       builder: (BuildContext context, state) {
-
-        String color = model.attribute.value.replaceAll('rgb(', '').replaceAll(')', '');
+        String color =
+            model.attribute.value.replaceAll('rgb(', '').replaceAll(')', '');
         List<String> R_G_BColor = color.split(',');
 
         return InkWell(
@@ -32,13 +48,19 @@ class ColorsListItem extends StatelessWidget {
             padding: const EdgeInsets.all(0.0),
             child: CircleAvatar(
               radius: 15,
-              backgroundColor:MainCubit.get(context).currentColor == index? HexColor(thirdColor) : HexColor(grey),
+              backgroundColor: MainCubit.get(context).currentColor == index
+                  ? HexColor(thirdColor)
+                  : HexColor(grey),
               child: CircleAvatar(
-                radius:MainCubit.get(context).currentColor == index? 12.0 : 13.0,
+                radius:
+                    MainCubit.get(context).currentColor == index ? 12.0 : 13.0,
                 backgroundColor: HexColor(white),
                 child: CircleAvatar(
-                  radius:MainCubit.get(context).currentColor == index? 11.0: 12.0,
-                  backgroundColor: Color.fromRGBO(int.parse(R_G_BColor[0]), int.parse(R_G_BColor[1]), int.parse(R_G_BColor[2]), 1),
+                  radius: MainCubit.get(context).currentColor == index
+                      ? 11.0
+                      : 12.0,
+                  backgroundColor: Color.fromRGBO(int.parse(R_G_BColor[0]),
+                      int.parse(R_G_BColor[1]), int.parse(R_G_BColor[2]), 1),
                   // model.attribute.value,
                 ),
               ),

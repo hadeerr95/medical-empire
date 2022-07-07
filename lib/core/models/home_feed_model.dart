@@ -43,30 +43,30 @@ class HomeDataModel {
   late final String ads_3;
 
   HomeDataModel.fromJson(Map<String, dynamic> json) {
-    if(json['ads_1'] != null) {
+    if (json['ads_1'] != null) {
       ads_1 = '$adsUrl${json['ads_1']}';
     }
-    if(json['ads_2'] != null) {
+    if (json['ads_2'] != null) {
       ads_2 = '$adsUrl${json['ads_2']}';
     }
-    if(json['ads_3'] != null) {
+    if (json['ads_3'] != null) {
       ads_3 = '$adsUrl${json['ads_3']}';
     }
-    if(json['offers_banners'] != null) {
+    if (json['offers_banners'] != null) {
       offersBanners = List.from(json['offers_banners'])
           .map((e) => OffersBanners.fromJson(e))
           .toList();
     }
-    if(json['best_offers'] != null) {
+    if (json['best_offers'] != null) {
       bestOffers = List.from(json['best_offers'])
           .map((e) => ProductModel.fromJson(e))
           .toList();
     }
-    if(json['sliders'] != null) {
+    if (json['sliders'] != null) {
       sliders =
           List.from(json['sliders']).map((e) => Sliders.fromJson(e)).toList();
     }
-    if(json['categories'] != null) {
+    if (json['categories'] != null) {
       categories = List.from(json['categories'])
           .map((e) => Categories.fromJson(e))
           .toList();
@@ -185,9 +185,12 @@ class Categories {
     id = json['id'];
     parentId = json['parent_id'];
     name = LanguageModel.fromMap(parseMapFromServer(json['name']));
-    description = LanguageModel.fromMap(parseMapFromServer(json['description']));
-    metaKeywords = LanguageModel.fromMap(parseMapFromServer(json['meta_keywords']));
-    metaDescription = LanguageModel.fromMap(parseMapFromServer(json['meta_description']));
+    description =
+        LanguageModel.fromMap(parseMapFromServer(json['description']));
+    metaKeywords =
+        LanguageModel.fromMap(parseMapFromServer(json['meta_keywords']));
+    metaDescription =
+        LanguageModel.fromMap(parseMapFromServer(json['meta_description']));
     special = json['special'];
     status = json['status'];
     imageAr = json['image_ar'];
@@ -195,7 +198,7 @@ class Categories {
     cover = json['cover'];
     bannerImageAr = '$categoriesUrl${json['banner_image_ar']}';
     bannerImageEn = '$categoriesUrl${json['banner_image_en']}';
-    if(json['products'] != null) {
+    if (json['products'] != null) {
       print('-------------------------------------------------------');
       print((json['products'] as List).length);
       products = List.from((json['products'] as List))

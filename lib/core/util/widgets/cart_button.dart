@@ -126,10 +126,8 @@ class _CartButtonState extends State<CartButton> {
                           : HexColor(darkWhite),
                       child: InkWell(
                         onTap: () async {
-                          int? stockRestriction =
-                              await MainCubit.get(context).cartAddition(
-                            id: widget.product.id,
-                          );
+                          int? stockRestriction = await MainCubit.get(context)
+                              .cartAddition(id: widget.product.id);
                           if (stockRestriction == null) {
                             setState(() {
                               count++;

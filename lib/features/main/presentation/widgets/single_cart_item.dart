@@ -5,7 +5,6 @@ import 'package:medical_empire_app/core/models/cart_model.dart';
 import 'package:medical_empire_app/core/util/constants.dart';
 import 'package:medical_empire_app/core/util/cubit/cubit.dart';
 import 'package:medical_empire_app/core/util/widgets/compare_button.dart';
-import 'package:medical_empire_app/core/util/widgets/dialog_button.dart';
 import 'package:medical_empire_app/core/util/widgets/one_option_dialog.dart';
 import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 import 'package:medical_empire_app/core/util/widgets/wish_list_button.dart';
@@ -191,20 +190,27 @@ class SingleCartItem extends StatelessWidget {
                                         ),
                                   ),
                                   IconButton(
-                                    onPressed: () async{
-                                      int? stockRestriction = await MainCubit.get(context).cartAddition(
-                                        id: cartItem.id,
-                                      );
-                                      if(stockRestriction!= null)
-                                      {
+                                    onPressed: () async {
+                                      int? stockRestriction =
+                                          await MainCubit.get(context)
+                                              .cartAddition(id: cartItem.id);
+                                      if (stockRestriction != null) {
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
                                               return OneOptionDialog(
-                                                message: appTranslation(context).cartAdditionMessage + stockRestriction.toString() + appTranslation(context).inStock,
+                                                message: appTranslation(context)
+                                                        .cartAdditionMessage +
+                                                    stockRestriction
+                                                        .toString() +
+                                                    appTranslation(context)
+                                                        .inStock,
                                                 popButtonVoidCallback: () {
                                                   Navigator.pop(context);
-                                                }, popButtonText: appTranslation(context).cancel,
+                                                },
+                                                popButtonText:
+                                                    appTranslation(context)
+                                                        .cancel,
                                                 // title: 'title',
                                               );
                                             });

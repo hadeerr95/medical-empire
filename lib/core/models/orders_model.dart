@@ -1,8 +1,4 @@
-import 'package:medical_empire_app/core/network/end_points.dart';
-import 'package:medical_empire_app/core/util/constants.dart';
-import 'package:medical_empire_app/core/util/language_model.dart';
-
-class OrdersModel{
+class OrdersModel {
   final OrdersDataModel orders;
   final int status;
 
@@ -66,6 +62,7 @@ class Order {
     required this.shipping_price,
     required this.extra_shipping,
     required this.overweight_price,
+    required this.couponValue,
   });
 
   late final int id;
@@ -76,6 +73,7 @@ class Order {
   late final String shipping_price;
   late final String extra_shipping;
   late final String overweight_price;
+  late final String couponValue;
   late final String paymentMethod;
   late final int status;
   late final String name;
@@ -98,26 +96,26 @@ class Order {
   late final String createdAt;
   // late final String updated_at;
 
-
   Order.fromJson(Map<String, dynamic> json) {
-    id = json['id']?? 0;
-    orderNumber = json['order_number']??'';
-    totalAmount = json['total_amount']??'';
-    shipping_price = json['shipping_price']??'';
-    extra_shipping = json['extra_shipping']??'';
-    overweight_price = json['overweight_price']??'';
-    itemsCount = json['items_count']??0;
-    paymentMethod = json['payment_method']??'';
-    status = json['status']??'';
-    name = json['name']??0;
-    email = json['email']??'';
-    phone = json['phone']??'';
-    governate = json['governate']??'';
-    city = json['city']??'';
-    streetName = json['street_name']??'';
-    buildingNumber = json['building_number']??'';
-    specialMarker = json['special_marker']??'';
-    createdAt = json['created_at']??'';
+    id = json['id'] ?? 0;
+    orderNumber = json['order_number'] ?? '';
+    totalAmount = json['total_amount'] ?? '';
+    shipping_price = json['shipping_price'] ?? '';
+    extra_shipping = json['extra_shipping'] ?? '';
+    overweight_price = json['overweight_price'] ?? '';
+    itemsCount = json['items_count'] ?? 0;
+    paymentMethod = json['payment_method'] ?? '';
+    status = json['status'] ?? '';
+    name = json['name'] ?? 0;
+    email = json['email'] ?? '';
+    phone = json['phone'] ?? '';
+    governate = json['governate'] ?? '';
+    city = json['city'] ?? '';
+    streetName = json['street_name'] ?? '';
+    buildingNumber = json['building_number'] ?? '';
+    specialMarker = json['special_marker'] ?? '';
+    couponValue = json['coupon_value'] ?? '';
+    createdAt = json['created_at'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -131,6 +129,7 @@ class Order {
     _data['phone'] = phone;
     _data['governate'] = governate;
     _data['city'] = city;
+    _data['coupon_value'] = couponValue;
     _data['street_name'] = streetName;
     _data['building_number'] = buildingNumber;
     _data['special_marker'] = specialMarker;

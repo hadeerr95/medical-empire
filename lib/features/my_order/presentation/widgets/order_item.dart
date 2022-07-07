@@ -8,8 +8,10 @@ import 'package:medical_empire_app/features/my_order/presentation/pages/my_order
 
 class OrderItem extends StatelessWidget {
   final Order order;
+  final int index;
 
-  const OrderItem({Key? key, required this.order}) : super(key: key);
+  const OrderItem({Key? key, required this.order, required this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,8 @@ class OrderItem extends StatelessWidget {
                       ));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -74,10 +77,12 @@ class OrderItem extends StatelessWidget {
                                 const Spacer(),
                                 Text(
                                   order.orderNumber,
-                                  style:
-                                      Theme.of(context).textTheme.headline6!.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                   maxLines: 1,
                                 ),
                               ],
@@ -121,7 +126,7 @@ class OrderItem extends StatelessWidget {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  '${order.totalAmount} ${appTranslation(context).egp}',
+                                  '${MainCubit.get(context).totalAmount(index: index)} ${appTranslation(context).egp}',
                                   style: Theme.of(context).textTheme.bodyText1!,
                                   maxLines: 1,
                                 ),

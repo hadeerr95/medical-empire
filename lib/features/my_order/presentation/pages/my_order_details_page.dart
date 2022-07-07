@@ -35,8 +35,8 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
       title: appTranslation(context).order_details,
       scaffoldBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocConsumer<MainCubit, MainState>(
-        listener: (context, state){
-          if(state is CancelOrderDetailsSuccess){
+        listener: (context, state) {
+          if (state is CancelOrderDetailsSuccess) {
             Navigator.pop(context);
           }
         },
@@ -137,9 +137,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(secondaryVariantDark),
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                 ),
                                 const Spacer(),
                                 Text(
@@ -148,9 +148,39 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(secondaryVariantDark),
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          space10Vertical,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Row(
+                              children: [
+                                Text(
+                                  appTranslation(context).coupon,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '${MainCubit.get(context).orderDetailsModel!.data.order.couponValue} ${appTranslation(context).egp}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                   maxLines: 1,
                                 ),
                               ],
@@ -167,9 +197,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(secondaryVariantDark),
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                 ),
                                 const Spacer(),
                                 Text(
@@ -178,9 +208,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(secondaryVariantDark),
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                   maxLines: 1,
                                 ),
                               ],
@@ -197,9 +227,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(secondaryVariantDark),
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                 ),
                                 const Spacer(),
                                 Text(
@@ -208,9 +238,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(secondaryVariantDark),
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                        color: HexColor(secondaryVariantDark),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                   maxLines: 1,
                                 ),
                               ],
@@ -227,9 +257,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(mainColor),
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                        color: HexColor(mainColor),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                 ),
                                 const Spacer(),
                                 Text(
@@ -238,9 +268,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .textTheme
                                       .subtitle1!
                                       .copyWith(
-                                    color: HexColor(mainColor),
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                        color: HexColor(mainColor),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                   maxLines: 1,
                                 ),
                               ],
@@ -403,7 +433,8 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                         children: [
                           Container(
                             alignment: AlignmentDirectional.topStart,
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
                               color: HexColor(green),
                             ),
@@ -413,15 +444,15 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                                       .orderDetailsModel!
                                       .data
                                       .order
-                                      .status,context: context),
+                                      .status,
+                                  context: context),
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1!
                                   .copyWith(
-                                fontWeight: FontWeight.w700,
-                                color:
-                                HexColor(surface),
-                              ),
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor(surface),
+                                  ),
                             ),
                           ),
                           ListView.separated(
@@ -445,10 +476,16 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                       ),
                     ),
                     space30Vertical,
-                    if(MainCubit.get(context).orderDetailsModel!.data.order.status == 0)
+                    if (MainCubit.get(context)
+                            .orderDetailsModel!
+                            .data
+                            .order
+                            .status ==
+                        0)
                       Conditional.single(
                         context: context,
-                        conditionBuilder: (context) => state is !CancelOrderDetailsLoading,
+                        conditionBuilder: (context) =>
+                            state is! CancelOrderDetailsLoading,
                         widgetBuilder: (context) => MyButton(
                           voidCallback: () {
                             MainCubit.get(context).cancelOrderDetails();
@@ -456,9 +493,9 @@ class _MyOrderDetailsPageState extends State<MyOrderDetailsPage> {
                           text: appTranslation(context).cancel,
                           color: HexColor(mainColor),
                         ),
-                        fallbackBuilder: (context) =>  const Center(child: CircularProgressIndicator()),
-                    ),
-
+                        fallbackBuilder: (context) =>
+                            const Center(child: CircularProgressIndicator()),
+                      ),
                   ],
                 ),
               ),

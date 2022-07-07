@@ -24,6 +24,7 @@ import 'package:medical_empire_app/features/product_details/presentation/widget/
 import 'package:medical_empire_app/features/product_details/presentation/widget/slider.dart';
 import 'package:medical_empire_app/features/review/presentation/page/add_review_page.dart';
 import 'package:medical_empire_app/features/review/presentation/page/review_page.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final String slug;
@@ -38,13 +39,22 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  BehaviorSubject<bool?> refresh = BehaviorSubject();
+
   @override
   void initState() {
     super.initState();
-
+    refresh.sink.add(false);
     MainCubit.get(context).getProductFeed(
       slug: widget.slug,
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    refresh.stream.drain();
+    refresh.close();
   }
 
   @override
@@ -53,6 +63,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       listener: (BuildContext context, state) {
         if (state is AddComparesSuccessState) {
           showToast(message: state.message, toastStates: ToastStates.SUCCESS);
+        }
+        if (state is SelectColor) {
+          refresh.sink.add(true);
         }
       },
       builder: (BuildContext context, state) {
@@ -184,43 +197,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                           .en,
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
-                                // space5Vertical,
-                                // Row(
-                                //   children: [
-                                //     RatingBar.builder(
-                                //       allowHalfRating: true,
-                                //       ignoreGestures: true,
-                                //       initialRating: 4.5,
-                                //       minRating: 1,
-                                //       itemSize: 16.0,
-                                //       direction: Axis.horizontal,
-                                //       itemCount: 5,
-                                //       itemBuilder: (context, _) =>  Icon(
-                                //         Icons.star,
-                                //         color: HexColor(secondColor),
-                                //       ),
-                                //       onRatingUpdate: (rating) {
-                                //         // print(rating);
-                                //       },
-                                //     ),
-                                //     space4Horizontal,
-                                //     Text(
-                                //       '(4)',
-                                //       style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                                //           color: secondaryVariant
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                                // space5Vertical,
-                                // Text(
-                                //   'SHIRTS',
-                                //   style: Theme.of(context).textTheme.caption!.copyWith(
-                                //     color: HexColor(thirdColor),
-                                //   ),
-                                // ),
                                 space20Vertical,
-
                                 Row(
                                   children: [
                                     Expanded(
@@ -263,9 +240,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                     }),
                                   ],
                                 ),
-
                                 space20Vertical,
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -352,7 +327,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                     ),
                                   ),
                                 space20Vertical,
-
                                 if (MainCubit.get(context)
                                         .productFeedModel!
                                         .data
@@ -396,7 +370,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                       space20Vertical,
                                     ],
                                   ),
-
                                 Row(
                                   children: [
                                     Container(
@@ -482,22 +455,28 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                       ),
                                     ),
                                     space10Horizontal,
-                                    if (MainCubit.get(context).cartMap[
-                                            MainCubit.get(context)
-                                                .productFeedModel!
-                                                .data
-                                                .product
-                                                .id] !=
-                                        null)
-                                      removeFromCartButton(context),
-                                    if (MainCubit.get(context).cartMap[
+                                    StreamBuilder<bool?>(
+                                        stream: refresh,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            if (checkIfProductInCartWithSpecifications(
+                                                context)) {
+                                              return removeFromCartButton(
+                                                  context);
+                                            } else {
+                                              return addToCartButton(context);
+                                            }
+                                          }
+                                          return addToCartButton(context);
+                                        }),
+                                    /*                  if (MainCubit.get(context).cartMap[
                                             MainCubit.get(context)
                                                 .productFeedModel!
                                                 .data
                                                 .product
                                                 .id] ==
                                         null)
-                                      addToCartButton(context),
+                                      addToCartButton(context),*/
                                   ],
                                 ),
                                 space10Vertical,
@@ -521,7 +500,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   showIcon: false,
                                   paddingHorizontal: 0.0,
                                 ),
-
                                 SettingsItem(
                                   title: appTranslation(context).reviews,
                                   function: () {
@@ -541,7 +519,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   paddingHorizontal: 0.0,
                                 ),
                                 space30Vertical,
-
                                 Text(
                                   appTranslation(context).related_product,
                                   style: Theme.of(context).textTheme.headline6,
@@ -587,6 +564,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         );
       },
     );
+  }
+
+  bool checkIfProductInCartWithSpecifications(BuildContext context) {
+    var productFoundOrNot = MainCubit.get(context).cartMap[
+            MainCubit.get(context).productFeedModel!.data.product.id] !=
+        null;
+    if (productFoundOrNot) {
+      var product = MainCubit.get(context)
+          .cartMap[MainCubit.get(context).productFeedModel!.data.product.id];
+      if (product?.color != null &&
+          product?.color?.en == MainCubit.get(context).selectedColor?.en &&
+          product?.color?.ar == MainCubit.get(context).selectedColor?.ar) {
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
   }
 
   void subtractItem(BuildContext context) {

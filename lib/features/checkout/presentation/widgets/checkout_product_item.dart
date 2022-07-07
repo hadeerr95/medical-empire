@@ -39,7 +39,7 @@ class CheckoutProductItem extends StatelessWidget {
           space10Horizontal,
           Expanded(
             child: SizedBox(
-              height: 150,
+              height: 155,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +41,7 @@ import 'package:medical_empire_app/core/util/translation.dart';
 import 'package:medical_empire_app/core/util/widgets/two_options_dialog.dart';
 
 import '../constants.dart';
+import '../language_model.dart';
 
 class MainCubit extends Cubit<MainState> {
   final Repository _repository;
@@ -74,8 +74,8 @@ class MainCubit extends Cubit<MainState> {
     //   pageController.jumpToPage(currentIndex);
     // }
     //
-    // print(currentIndex);
-    // print(pageController.page);
+    // debugPrint(currentIndex);
+    // debugPrint(pageController.page);
 
     emit(BottomChanged());
   }
@@ -110,7 +110,7 @@ class MainCubit extends Cubit<MainState> {
     isDark = dark;
     isRtl = rtl;
 
-    print('dark mode ------------- $isDark');
+    debugPrint('dark mode ------------- $isDark');
 
     changeTheme();
 
@@ -364,8 +364,8 @@ class MainCubit extends Cubit<MainState> {
         CategoriesSuccessState(),
       );
     }).catchError((error) {
-      print('can not get categories');
-      print(error.toString());
+      debugPrint('can not get categories');
+      debugPrint(error.toString());
       emit(Error());
     });
   }
@@ -375,13 +375,14 @@ class MainCubit extends Cubit<MainState> {
   void getBrands() async {
     await _repository.getBrands().then((value) {
       brandsModel = BrandsModel.fromJson(value.data);
-      print('brands ------------------------------------------------------');
-      print(brandsModel!.brands[0].image);
+      debugPrint(
+          'brands ------------------------------------------------------');
+      debugPrint(brandsModel!.brands[0].image.toString());
       emit(
         HomeSuccessState(),
       );
     }).catchError((error) {
-      print(
+      debugPrint(
           'brands ------------------------------------------------------ error ${error.toString()}');
       emit(HomeErrorState());
     });
@@ -393,8 +394,9 @@ class MainCubit extends Cubit<MainState> {
     emit(BlogsLoadingState());
     await _repository.getBlogs().then((value) {
       bLogModel = BlogModel.fromJson(value.data);
-      print('blogs ------------------------------------------------------');
-      print(bLogModel!.data.blog[0].title);
+      debugPrint(
+          'blogs ------------------------------------------------------');
+      debugPrint(bLogModel!.data.blog[0].title.toString());
       emit(BlogsSuccessState());
     }).catchError((error) {
       emit(Error());
@@ -407,13 +409,14 @@ class MainCubit extends Cubit<MainState> {
     emit(HomeLoadingState());
 
     await _repository.getHome().then((value) {
-      print('home --------');
-      print(value.data);
+      debugPrint('home --------');
+      debugPrint(value.data.toString());
       homeFeedModel = HomeFeedModel.fromJson(value.data);
       emit(
         HomeSuccessState(),
       );
     }).catchError((error) {
+      debugPrint("home errrrrrrrrrrrrrrrrrrror----------------- $error");
       emit(Error());
     });
   }
@@ -428,8 +431,8 @@ class MainCubit extends Cubit<MainState> {
     if (userSigned) {
       emit(WishlistLoadingState());
       await _repository.getWishList().then((value) {
-        print('wishlis --------');
-        print(value.data);
+        debugPrint('wishlis --------');
+        debugPrint(value.data.toString());
         wishlistModel = WishlistModel.fromJson(value.data);
         for (var element in wishlistModel!.products) {
           if (!wishlistId.contains(element.id)) {
@@ -440,7 +443,7 @@ class MainCubit extends Cubit<MainState> {
           WishlistSuccessState(),
         );
       }).catchError((error) {
-        print('Wishlist Error -------- ${error.toString()}');
+        debugPrint('Wishlist Error -------- ${error.toString()}');
         emit(WishlistErrorState());
       });
     }
@@ -454,11 +457,11 @@ class MainCubit extends Cubit<MainState> {
           builder: (BuildContext context) {
             return TwoOptionsDialog(
               pushButtonVoidCallback: () {
-                print(wishlistId.toString());
+                debugPrint(wishlistId.toString());
 
                 wishlistId.remove(productId);
 
-                print(wishlistId.toString());
+                debugPrint(wishlistId.toString());
 
                 removeFromWishList(productId: productId);
                 Navigator.pop(context);
@@ -476,8 +479,8 @@ class MainCubit extends Cubit<MainState> {
       wishlistId.add(productId);
       emit(WishlistLoadingState());
       await _repository.addToWishList(productId: productId).then((value) {
-        print('wishlis --------');
-        print(value.data);
+        debugPrint('wishlis --------');
+        debugPrint(value.data.toString());
         getWishListModel();
       }).catchError((error) {
         emit(WishlistErrorState());
@@ -489,8 +492,8 @@ class MainCubit extends Cubit<MainState> {
     emit(WishlistLoadingState());
 
     await _repository.deleteFromWishList(productId: productId).then((value) {
-      print('wishlis --------');
-      print(value.data);
+      debugPrint('wishlis --------');
+      debugPrint(value.data.toString());
       getWishListModel();
     }).catchError((error) {
       emit(WishlistErrorState());
@@ -521,9 +524,9 @@ class MainCubit extends Cubit<MainState> {
     await _repository.login(email: email, password: password).then((value) {
       if (value.statusCode == 200) {
         simpleModelLogin = SimpleModel.fromJson(value.data);
-        // print('login ------------------------------------------------------');
-        // print(simpleModelLogin!.token);
-        // print(simpleModelLogin!.status);
+        // debugPrint('login ------------------------------------------------------');
+        // debugPrint(simpleModelLogin!.token);
+        // debugPrint(simpleModelLogin!.status);
         token = simpleModelLogin!.token;
         userSigned = true;
         getWishListModel();
@@ -533,10 +536,10 @@ class MainCubit extends Cubit<MainState> {
         emit(LoginError(value.data['error']));
       }
     }).catchError((error) {
-      print(
+      debugPrint(
           'login error ------------------------------------------------------');
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           'login error ------------------------------------------------------');
       emit(Error());
     });
@@ -567,16 +570,16 @@ class MainCubit extends Cubit<MainState> {
         .then((value) {
       if (value.statusCode == 200) {
         simpleModelRegister = SimpleModel.fromJson(value.data);
-        print(
+        debugPrint(
             'register ------------------------------------------------------');
-        // print(simpleModelRegister!.status);
+        // debugPrint(simpleModelRegister!.status);
         emit(RegisterSuccess(simpleModelRegister!));
       } else {
         emit(Error());
       }
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           'error is here ------------------------------------------------------');
       emit(Error());
     });
@@ -623,6 +626,7 @@ class MainCubit extends Cubit<MainState> {
   String storedImage = '';
   String storedPrice = '';
   num storedColorSelected = 0;
+  LanguageModel? selectedColor;
 
   void selectColor(int index) {
     currentColor = index;
@@ -630,14 +634,13 @@ class MainCubit extends Cubit<MainState> {
     storedColorSelected = productFeedModel!
         .data.product.color_attributes![currentColor].attribute.id;
 
+    selectedColor = productFeedModel!
+        .data.product.color_attributes![currentColor].attribute.name;
     num colorPrice =
         productFeedModel!.data.product.color_attributes![currentColor].price;
     String colorImage =
         productFeedModel!.data.product.color_attributes![currentColor].image ??
             productFeedModel!.data.product.image;
-    // String colorImage = productFeedModel!.data.product
-    //     .color_attributes![currentColor].image;
-
     storedPrice = productFeedModel!.data.product.price;
 
     if (currentSize != -1) {
@@ -657,12 +660,12 @@ class MainCubit extends Cubit<MainState> {
     }
 
     if (productFeedModel!.data.product.gallery != null) {
-      print('has a gallery');
+      debugPrint('has a gallery');
 
       productFeedModel!.data.product.gallery!.clear();
       productFeedModel!.data.product.gallery!.add(colorImage);
     } else {
-      print('has an image');
+      debugPrint('has an image');
 
       productFeedModel!.data.product.image = colorImage;
     }
@@ -685,8 +688,8 @@ class MainCubit extends Cubit<MainState> {
     productFeedModel!.data.product.price = storedPrice;
     productMainPrice = storedPrice;
 
-    print(storedImage);
-    print(storedGallery);
+    debugPrint(storedImage.toString());
+    debugPrint(storedGallery.toString());
 
     productFeedModel!.data.product.image = storedImage;
     productFeedModel!.data.product.gallery = storedGallery;
@@ -760,7 +763,7 @@ class MainCubit extends Cubit<MainState> {
         model.toJson(),
       )
           .then((value) {
-        print('cart inserted !!!');
+        debugPrint('cart inserted !!!');
       });
       await sumSubTotalCart();
       sumShipping();
@@ -778,7 +781,7 @@ class MainCubit extends Cubit<MainState> {
     if (cartMap[id]!.quantity > 1) {
       cartMap[id]!.quantity = cartMap[id]!.quantity - 1;
       var value = await sl<CacheHelper>().get('cart');
-      print('cart ---------------------------- $value');
+      debugPrint('cart ---------------------------- $value');
       if (value != null) {
         cartListData = MainCartModel.fromJson(value).data;
       }
@@ -798,7 +801,7 @@ class MainCubit extends Cubit<MainState> {
         model.toJson(),
       )
           .then((value) {
-        print('cart inserted !!!');
+        debugPrint('cart inserted !!!');
       });
       await sumSubTotalCart();
       sumShipping();
@@ -824,7 +827,7 @@ class MainCubit extends Cubit<MainState> {
     } else {
       firstTotalCart = subtotalCart;
     }
-    print("===========================$firstTotalCart");
+    debugPrint("===========================$firstTotalCart");
 
     emit(CartSubTotal());
   }
@@ -849,9 +852,9 @@ class MainCubit extends Cubit<MainState> {
 
   void checkConnectivity() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      print('Internet Connection ------------------------');
-      print(result.index);
-      print(result.toString());
+      debugPrint('Internet Connection ------------------------');
+      debugPrint(result.index.toString());
+      debugPrint(result.toString());
       if (result.index == 0 || result.index == 1) {
         noInternetConnection = false;
       } else if (result.index == 2) {
@@ -919,9 +922,9 @@ class MainCubit extends Cubit<MainState> {
       slug: slug,
     )
         .then((value) {
-      print('------------ ProductDetails --------');
-      print(slug);
-      // print(value.data);
+      debugPrint('------------ ProductDetails --------');
+      debugPrint(slug.toString());
+      // debugPrint(value.data);
       productFeedModel = ProductFeedModel.fromJson(value.data);
       productMainPrice = productFeedModel!.data.product.price;
       storedGallery = productFeedModel!.data.product.gallery!;
@@ -933,13 +936,13 @@ class MainCubit extends Cubit<MainState> {
       //   }
       // }
 
-      // print(productFeedModel!.data.product.gallery[0]);
-      // print(productFeedModel!.data.product.gallery[1]);
+      // debugPrint(productFeedModel!.data.product.gallery[0]);
+      // debugPrint(productFeedModel!.data.product.gallery[1]);
       emit(
         ProductDetailsSuccess(),
       );
     }).catchError((error) {
-      print('ProductDetailsError --------$error');
+      debugPrint('ProductDetailsError --------$error');
       emit(ProductDetailsError());
     });
   }
@@ -987,8 +990,8 @@ class MainCubit extends Cubit<MainState> {
 
       emit(CategoryProductsSuccessState());
     }).catchError((error) {
-      print('getCategoryProduct error');
-      print(error.toString());
+      debugPrint('getCategoryProduct error');
+      debugPrint(error.toString());
       emit(CategoryProductsErrorState(error.toString()));
     });
   }
@@ -1017,7 +1020,7 @@ class MainCubit extends Cubit<MainState> {
     selectedGovernment = model;
     selectedCity = citiesModel ?? selectedGovernment!.cities[0];
     if (checkoutModel != null) {
-      print("********* " + selectedCity!.name + selectedGovernment!.name);
+      debugPrint("********* " + selectedCity!.name + selectedGovernment!.name);
       sumShipping(
           governorateID: model.id,
           updateShippingAddressesSelected: citiesModel == null);
@@ -1028,7 +1031,7 @@ class MainCubit extends Cubit<MainState> {
   void selectCity(CitiesModel model) {
     selectedCity = model;
     if (checkoutModel != null) {
-      print("********* " + selectedCity!.name + selectedGovernment!.name);
+      debugPrint("********* " + selectedCity!.name + selectedGovernment!.name);
       sumShipping(
           governorateID: model.governorateId,
           updateShippingAddressesSelected: true);
@@ -1045,8 +1048,8 @@ class MainCubit extends Cubit<MainState> {
       selectedCity = selectedGovernment!.cities[0];
       emit(MyAddressSuccessState());
     }).catchError((error) {
-      print('my Address Error------------------------');
-      print(error.toString());
+      debugPrint('my Address Error------------------------');
+      debugPrint(error.toString());
       emit(MyAddressErrorState(error.toString()));
     });
   }
@@ -1074,8 +1077,8 @@ class MainCubit extends Cubit<MainState> {
         emit(AddAddressSuccessState(model.message!));
       }
     }).catchError((error) {
-      print('Add Address Error------------------------');
-      print(error.toString());
+      debugPrint('Add Address Error------------------------');
+      debugPrint(error.toString());
       emit(AddAddressErrorState(error.toString()));
     });
   }
@@ -1089,8 +1092,8 @@ class MainCubit extends Cubit<MainState> {
       emit(DeleteAddressSuccessState(model.message!));
       getMyAddress();
     }).catchError((error) {
-      print('Delete Address Error------------------------');
-      print(error.toString());
+      debugPrint('Delete Address Error------------------------');
+      debugPrint(error.toString());
       emit(DeleteAddressErrorState(error.toString()));
     });
   }
@@ -1104,12 +1107,12 @@ class MainCubit extends Cubit<MainState> {
 //     emit(GetAllBrandsLoading());
 //     await _repository.getAllBrands().then((value) {
 //       allBrands = BrandsModel.fromJson(value.data);
-//       print(' --------------------------------------------all brands');
-//       //print(allBrands!.brands.brands[0].name);
+//       debugPrint(' --------------------------------------------all brands');
+//       //debugPrint(allBrands!.brands.brands[0].name);
 //       emit(GetAllBrandsSuccess());
 //     }).catchError((error) {
-//       print(error.toString());
-//       print(' --------------------------------------------all brands error');
+//       debugPrint(error.toString());
+//       debugPrint(' --------------------------------------------all brands error');
 //       emit(Error());
 //     });
 //   }
@@ -1129,12 +1132,13 @@ class MainCubit extends Cubit<MainState> {
       brandDetails = BrandsDetailsModel.fromJson(value.data);
       productsList =
           brandDetails!.brandsDetailsDataModel.productsDataModel.productsList;
-      print(' --------------------------------------------brand details');
-      //print(allBrands!.brands.brands[0].name);
+      debugPrint(' --------------------------------------------brand details');
+      //debugPrint(allBrands!.brands.brands[0].name);
       emit(GetBrandDetailsSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(' --------------------------------------------brand details error');
+      debugPrint(error.toString());
+      debugPrint(
+          ' --------------------------------------------brand details error');
       emit(Error());
     });
   }
@@ -1151,12 +1155,13 @@ class MainCubit extends Cubit<MainState> {
     emit(GetBlogDetailsLoading());
     await _repository.getBlogDetails(id: id).then((value) {
       bLogDetailsModel = BLogDetailsModel.fromJson(value.data);
-      print(
+      debugPrint(
           ' --------------------------------------------blog details success');
       emit(GetBlogDetailsSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(' --------------------------------------------blog details error');
+      debugPrint(error.toString());
+      debugPrint(
+          ' --------------------------------------------blog details error');
       emit(Error());
     });
   }
@@ -1205,7 +1210,7 @@ class MainCubit extends Cubit<MainState> {
 
       emit(SearchSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(SearchErrorState(error.toString()));
     });
   }
@@ -1218,13 +1223,13 @@ class MainCubit extends Cubit<MainState> {
   int? brandId;
   String brandName = '';
 
-  void selectBrand(brand_id, brand_name) {
-    if (brandId == brand_id) {
+  void selectBrand(brandID, brandName) {
+    if (brandId == brandID) {
       brandId = -1;
       brandName = '';
     } else {
-      brandId = brand_id;
-      brandName = brand_name;
+      brandId = brandID;
+      brandName = brandName;
     }
     emit(SelectBrand());
   }
@@ -1270,15 +1275,15 @@ class MainCubit extends Cubit<MainState> {
 
   void getAccount() async {
     if (userSigned) {
-      print('----------------My Account------------------');
+      debugPrint('----------------My Account------------------');
       emit(MyAccountLoadingState());
       await _repository.getMyAccount().then((value) {
         myAccountModel = MyAccountModel.fromJson(value.data);
         emit(MyAccountSuccessState());
-        print('----------------My Account------------------ Success');
+        debugPrint('----------------My Account------------------ Success');
       }).catchError((error) {
         emit(MyAccountErrorState(error.toString()));
-        print(
+        debugPrint(
             '----------------My Account------------------ Error${error.toString()}');
       });
     }
@@ -1289,7 +1294,7 @@ class MainCubit extends Cubit<MainState> {
     required String email,
     required String phone,
   }) async {
-    print('----------------update Account------------------');
+    debugPrint('----------------update Account------------------');
     emit(UpdateAccountLoadingState());
     await _repository
         .updateAccount(
@@ -1304,10 +1309,10 @@ class MainCubit extends Cubit<MainState> {
         emit(UpdateAccountSuccessState(model.message!));
       }
       getAccount();
-      print('----------------update Account------------------ Success');
+      debugPrint('----------------update Account------------------ Success');
     }).catchError((error) {
       emit(UpdateAccountErrorState(error.toString()));
-      print(
+      debugPrint(
           '----------------update Account------------------ Error${error.toString()}');
     });
   }
@@ -1320,15 +1325,15 @@ class MainCubit extends Cubit<MainState> {
 
   void getNotification() async {
     notificationFeedModel = null;
-    print('----------------Notification------------------');
+    debugPrint('----------------Notification------------------');
     emit(NotificationLoadingState());
     await _repository.getNotification().then((value) {
       notificationFeedModel = NotificationFeedModel.fromJson(value.data);
       emit(NotificationSuccessState());
-      print('----------------Notification------------------ Success');
+      debugPrint('----------------Notification------------------ Success');
     }).catchError((error) {
       emit(NotificationErrorState(error.toString()));
-      print(
+      debugPrint(
           '----------------Notification------------------ Error ${error.toString()}');
     });
   }
@@ -1340,18 +1345,18 @@ class MainCubit extends Cubit<MainState> {
   AboutUsModel? aboutUsModel;
 
   void getAboutUs() async {
-    print('----------------About Us loading------------------');
+    debugPrint('----------------About Us loading------------------');
     emit(AboutUsLoadingState());
     await _repository.getAboutUs().then((value) {
       aboutUsModel = AboutUsModel.fromJson(value.data);
-      print(aboutUsModel!.data.name);
-      print('----------------About Us success ------------------ Success');
+      debugPrint(aboutUsModel!.data.name.toString());
+      debugPrint('----------------About Us success ------------------ Success');
       emit(AboutUsSuccessState());
     }).catchError((error) {
       emit(AboutUsErrorState(error.toString()));
-      print(
+      debugPrint(
           '----------------About Us error------------------ Error ${error.toString()}');
-      print(
+      debugPrint(
           '----------------About Us error------------------ Error ${error.toString()}');
     });
   }
@@ -1363,13 +1368,13 @@ class MainCubit extends Cubit<MainState> {
   ComparesModel? comparesModel;
 
   void getCompares() async {
-    print('----------------Compares------------------');
+    debugPrint('----------------Compares------------------');
     emit(ComparesLoadingState());
     await _repository.getCompares().then((value) {
       comparesModel = ComparesModel.fromJson(value.data);
       emit(ComparesSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(ComparesErrorState(error.toString()));
     });
   }
@@ -1377,14 +1382,14 @@ class MainCubit extends Cubit<MainState> {
   void addCompares({
     required int productId,
   }) async {
-    print('----------------Add Compares------------------');
+    debugPrint('----------------Add Compares------------------');
     emit(AddComparesLoadingState());
     await _repository.addCompares(productId: productId).then((value) {
       SimpleModel model = SimpleModel.fromJson(value.data);
       emit(AddComparesSuccessState(model.message!));
       getCompares();
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(AddComparesErrorState(error.toString()));
     });
   }
@@ -1392,16 +1397,16 @@ class MainCubit extends Cubit<MainState> {
   void removeFromCompares({
     required int compareId,
   }) async {
-    print('----------------RemoveCompare------------------');
+    debugPrint('----------------RemoveCompare------------------');
     emit(RemoveComparesLoadingState());
     await _repository.removeCompare(compareId: compareId).then((value) {
       SimpleModel model = SimpleModel.fromJson(value.data);
-      print('----------------RemoveCompare------------------ success');
+      debugPrint('----------------RemoveCompare------------------ success');
       emit(RemoveComparesSuccessState(model.message!));
       getCompares();
     }).catchError((error) {
-      print(error.toString());
-      print('----------------RemoveCompare------------------ error');
+      debugPrint(error.toString());
+      debugPrint('----------------RemoveCompare------------------ error');
       emit(RemoveComparesErrorState(error.toString()));
     });
   }
@@ -1432,13 +1437,13 @@ class MainCubit extends Cubit<MainState> {
         .then((value) {
       // responseMessage = value.data['message'];
       // responseState = value.data['state'];
-      print(
+      debugPrint(
           'contact us ------------------------------------------------------');
-      print(value.data['message']);
+      debugPrint(value.data['message']);
       emit(ContactUsSuccessState(value.data['message']));
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           'error is here ------------------------------------------------------');
       emit(Error());
     });
@@ -1450,14 +1455,14 @@ class MainCubit extends Cubit<MainState> {
   FAQsModel? faqsModel;
 
   void getFAQs() async {
-    print('----------------Compares------------------');
+    debugPrint('----------------Compares------------------');
     emit(FAQsLoadingState());
     await _repository.getFAQs().then((value) {
       faqsModel = FAQsModel.fromJson(value.data);
-      print(faqsModel!.faqs[0].question);
+      debugPrint(faqsModel!.faqs[0].question.toString());
       emit(FAQsSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(Error());
     });
   }
@@ -1469,13 +1474,13 @@ class MainCubit extends Cubit<MainState> {
   void newsLetter({
     required String email,
   }) async {
-    print('----------------news letter------------------');
+    debugPrint('----------------news letter------------------');
     emit(NewsLetterLoadingState());
     await _repository.newsLetter(email: email).then((value) {
-      print('----------------news letter success------------------');
+      debugPrint('----------------news letter success------------------');
       emit(NewsLetterSuccessState(value.data['message']));
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(Error());
     });
   }
@@ -1489,14 +1494,14 @@ class MainCubit extends Cubit<MainState> {
   void getUsedProduct({
     required int productId,
   }) async {
-    print('----------------Used Product------------------');
+    debugPrint('----------------Used Product------------------');
     emit(UsedProductLoadingState());
     await _repository.usedMarketProduct(productId: productId).then((value) {
-      print('----------------Used Product- no parsing -----------------');
+      debugPrint('----------------Used Product- no parsing -----------------');
       usedProductFeedModel = UsedProductFeedModel.fromJson(value.data);
       emit(UsedProductSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(UsedProductErrorState(error.toString()));
     });
   }
@@ -1508,15 +1513,15 @@ class MainCubit extends Cubit<MainState> {
   UsedMarketModel? usedMarketModel;
 
   void getUsedMarket() async {
-    print('---------------------------------- Used Product Loading');
+    debugPrint('---------------------------------- Used Product Loading');
     emit(GetUsedMarketLoadingState());
     await _repository.getUsedMarket().then((value) {
       usedMarketModel = UsedMarketModel.fromJson(value.data);
-      print('---------------------------------- Used Product Success');
+      debugPrint('---------------------------------- Used Product Success');
       emit(GetUsedMarketSuccessState());
     }).catchError((error) {
-      print('---------------------------------- Used Product Error');
-      print(error.toString());
+      debugPrint('---------------------------------- Used Product Error');
+      debugPrint(error.toString());
       emit(Error());
     });
   }
@@ -1530,19 +1535,19 @@ class MainCubit extends Cubit<MainState> {
     required int id,
   }) async {
     usedMarketCatDetailsModel = null;
-    print(
+    debugPrint(
         ' --------------------------------------------getUsedMarketCatDetails loading');
     emit(GetUsedMarketDetailsLoading());
     await _repository.getUsedMarketCatDetails(id: id).then((value) {
       usedMarketCatDetailsModel =
           UsedMarketCatDetailsModel.fromJson(value.data);
-      print(
+      debugPrint(
           ' --------------------------------------------getUsedMarketCatDetails success');
-      //print(allBrands!.brands.brands[0].name);
+      //debugPrint(allBrands!.brands.brands[0].name);
       emit(GetUsedMarketDetailsSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           ' --------------------------------------------getUsedMarketCatDetails error');
       emit(Error());
     });
@@ -1557,7 +1562,7 @@ class MainCubit extends Cubit<MainState> {
     required double rating,
     required String review,
   }) async {
-    print('----------------Add Review------------------');
+    debugPrint('----------------Add Review------------------');
     emit(AddReviewLoadingState());
     await _repository
         .addReview(
@@ -1569,7 +1574,7 @@ class MainCubit extends Cubit<MainState> {
       SimpleModel model = SimpleModel.fromJson(value.data);
       emit(AddReviewSuccessState(model.message!));
     }).catchError((error) {
-      print(error.toString());
+      debugPrint(error.toString());
       emit(AddReviewErrorState(error.toString()));
     });
   }
@@ -1580,15 +1585,18 @@ class MainCubit extends Cubit<MainState> {
   OrdersModel? ordersModel;
 
   void getOrders() async {
-    print(' --------------------------------------------get orders loading');
+    debugPrint(
+        ' --------------------------------------------get orders loading');
     emit(GetOrdersLoading());
     await _repository.getOrders().then((value) {
       ordersModel = OrdersModel.fromJson(value.data);
-      print(' --------------------------------------------get orders success');
+      debugPrint(
+          ' --------------------------------------------get orders success');
       emit(GetOrdersSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(' --------------------------------------------get orders error');
+      debugPrint(error.toString());
+      debugPrint(
+          ' --------------------------------------------get orders error');
       emit(Error());
     });
   }
@@ -1619,17 +1627,20 @@ class MainCubit extends Cubit<MainState> {
 
   getCheckout() async {
     checkoutModel = null;
-    print(' -------------------------------------------getCheckout loading');
+    debugPrint(
+        ' -------------------------------------------getCheckout loading');
     emit(GetCheckoutLoading());
     await _repository.getCheckout().then((value) {
       checkoutModel = AddressFeedModel.fromJson(value.data);
       sumShipping();
-      // print(checkoutModel!.data.addresses![0].street_name);
-      print(' -------------------------------------------getCheckout success');
+      // debugPrint(checkoutModel!.data.addresses![0].street_name);
+      debugPrint(
+          ' -------------------------------------------getCheckout success');
       emit(GetCheckoutSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(' -------------------------------------------getCheckout error');
+      debugPrint(error.toString());
+      debugPrint(
+          ' -------------------------------------------getCheckout error');
       emit(Error());
     });
   }
@@ -1643,48 +1654,58 @@ class MainCubit extends Cubit<MainState> {
     required int id,
   }) async {
     orderDetailsModel = null;
-    print(' --------------------------------------------getOrderDetails error');
+    debugPrint(
+        ' --------------------------------------------getOrderDetails error');
     emit(GetOrderDetailsLoading());
     await _repository.getOrderDetails(id: id).then((value) {
       orderDetailsModel = OrderDetailsModel.fromJson(value.data);
-      print(
+      debugPrint(
           ' --------------------------------------------getOrderDetails success');
-      print(orderDetailsModel!.data.orderItems[0].price);
+      debugPrint(orderDetailsModel!.data.orderItems[0].price);
       emit(GetOrderDetailsSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           ' --------------------------------------------getOrderDetails error');
       emit(Error());
     });
   }
 
   void cancelOrderDetails() async {
-    print(
+    debugPrint(
         ' --------------------------------------------cancelOrderDetails error');
     emit(CancelOrderDetailsLoading());
     await _repository
         .orderCancel(orderId: orderDetailsModel!.data.order.id)
         .then((value) {
       getOrders();
-      print(
+      debugPrint(
           ' --------------------------------------------cancelOrderDetails success');
       emit(CancelOrderDetailsSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           ' --------------------------------------------cancelOrderDetails error');
       emit(Error());
     });
   }
 
-  double totalAmount() {
+  double totalAmount({int? index}) {
     double amount = 0;
 
-    amount = double.parse(orderDetailsModel!.data.order.totalAmount) +
-        double.parse(orderDetailsModel!.data.order.shipping_price) +
-        double.parse(orderDetailsModel!.data.order.extra_shipping) +
-        double.parse(orderDetailsModel!.data.order.overweight_price);
+    if (orderDetailsModel == null && index != null) {
+      amount = double.parse(ordersModel!.orders.orders[index].totalAmount) +
+          double.parse(ordersModel!.orders.orders[index].shipping_price) +
+          double.parse(ordersModel!.orders.orders[index].extra_shipping) +
+          double.parse(ordersModel!.orders.orders[index].couponValue) +
+          double.parse(ordersModel!.orders.orders[index].overweight_price);
+    } else {
+      amount = double.parse(orderDetailsModel!.data.order.totalAmount) +
+          double.parse(orderDetailsModel!.data.order.shipping_price) +
+          double.parse(orderDetailsModel!.data.order.extra_shipping) +
+          double.parse(orderDetailsModel!.data.order.couponValue) +
+          double.parse(orderDetailsModel!.data.order.overweight_price);
+    }
     return amount;
   }
 
@@ -1716,20 +1737,20 @@ class MainCubit extends Cubit<MainState> {
     required String notificationId,
   }) async {
     readNotificationModel = null;
-    print(
+    debugPrint(
         ' --------------------------------------------readNotification loading');
     emit(ReadNotificationLoading());
     await _repository
         .readNotification(notificationId: notificationId)
         .then((value) {
       readNotificationModel = ReadNotificationModel.fromJson(value.data);
-      print(
+      debugPrint(
           ' --------------------------------------------readNotification success');
-      print(readNotificationModel!.data.order.name);
+      debugPrint(readNotificationModel!.data.order.name);
       emit(ReadNotificationSuccess());
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           ' --------------------------------------------readNotification error');
       emit(Error());
     });
@@ -1746,7 +1767,7 @@ class MainCubit extends Cubit<MainState> {
     required String confirmPassword,
   }) async {
     changePasswordModel = null;
-    print(
+    debugPrint(
         ' --------------------------------------------changePassword loading');
     emit(ChangePasswordLoading());
     await _repository
@@ -1756,15 +1777,15 @@ class MainCubit extends Cubit<MainState> {
       confirmPassword: confirmPassword,
     )
         .then((value) {
-      print('done');
+      debugPrint('done');
       changePasswordModel = SimpleModel.fromJson(value.data);
-      print(changePasswordModel!.message);
-      print(
+      debugPrint(changePasswordModel!.message);
+      debugPrint(
           ' --------------------------------------------changePassword success');
       emit(ChangePasswordSuccess(changePasswordModel!.message!));
     }).catchError((error) {
-      print(error.toString());
-      print(
+      debugPrint(error.toString());
+      debugPrint(
           ' --------------------------------------------changePassword error');
       emit(Error());
     });
@@ -1796,12 +1817,13 @@ class MainCubit extends Cubit<MainState> {
   SimpleModel? checkoutSimpleModel;
 
   void createCheckout() async {
-    print(' -------------------------------------------createCheckout loading');
+    debugPrint(
+        ' -------------------------------------------createCheckout loading');
 
     List items = [];
 
     cartMap.values.toList().forEach((e) {
-      // print(' -------------------------------------------images ${e.attributeImage!.split('/').last}');
+      // debugPrint(' -------------------------------------------images ${e.attributeImage!.split('/').last}');
 
       items.add(CreateCheckoutItemModel(
         price: int.parse(e.price),
@@ -1859,16 +1881,17 @@ class MainCubit extends Cubit<MainState> {
     )
         .then((value) {
       // checkoutModel = AddressFeedModel.fromJson(value.data);
-      // print(checkoutModel!.data.addresses[0].street_name);
+      // debugPrint(checkoutModel!.data.addresses[0].street_name);
 
       checkoutSimpleModel = SimpleModel.fromJson(value.data);
 
-      print(
+      debugPrint(
           '-------------------------------------------createCheckout success');
       emit(CreateCheckoutSuccess(checkoutSimpleModel!.message!));
     }).catchError((error) {
-      print(error.toString());
-      print('-------------------------------------------createCheckout error');
+      debugPrint(error.toString());
+      debugPrint(
+          '-------------------------------------------createCheckout error');
       emit(Error());
     });
   }
@@ -1879,7 +1902,7 @@ class MainCubit extends Cubit<MainState> {
         cartMap = {};
         couponsModel = null;
         couponEditingController.text = "";
-        print("asdasdsa" + cartMap.toString());
+        debugPrint("asdasdsa" + cartMap.toString());
         cartListData = [];
         emit(CartClear());
       });
@@ -1910,7 +1933,7 @@ class MainCubit extends Cubit<MainState> {
       coupon: coupon,
     )
         .then((value) {
-      print('done');
+      debugPrint('done');
       couponsModel = CouponsModel.fromJson(value.data);
 
       if (value.data["data"] == null) {
@@ -1924,7 +1947,7 @@ class MainCubit extends Cubit<MainState> {
           couponsModel!.toJson(),
         )
             .then((value) {
-          print(
+          debugPrint(
               ' --------------------------------------------apply Coupon success');
           emit(ApplyCouponSuccess(couponsModel!.message.isNotEmpty
               ? couponsModel!.message
@@ -1932,8 +1955,9 @@ class MainCubit extends Cubit<MainState> {
         });
       }
     }).catchError((error) {
-      print(error.toString());
-      print(' --------------------------------------------apply Coupon error');
+      debugPrint(error.toString());
+      debugPrint(
+          ' --------------------------------------------apply Coupon error');
       emit(ApplyCouponError(error.toString()));
     });
   }
@@ -1960,18 +1984,18 @@ class MainCubit extends Cubit<MainState> {
             for (var city in governorate.cities) {
               if (city.id == selectedCity!.id) {
                 totalShippingPrice = city.shippingPrice?.price ?? 0;
-                print("city $totalShippingPrice");
+                debugPrint("city $totalShippingPrice");
                 if (totalShippingPrice == 0) {
                   totalShippingPrice =
                       governorate.governmentShippingPriceModel.price;
-                  print("governorate $totalShippingPrice");
+                  debugPrint("governorate $totalShippingPrice");
                 }
               }
             }
           }
         }
       } else {
-        print("---------------else -------");
+        debugPrint("---------------else -------");
         int cityShippingPrice = checkoutModel!
             .data
             .shippingAddresses![shippingAddressIndex]
@@ -1986,7 +2010,7 @@ class MainCubit extends Cubit<MainState> {
               .governorateShippingPrice
               .price;
           // in case user not have any shipping addresses
-          print(
+          debugPrint(
               "-----------cityShippingPrice == $shippingAddressIndex--------");
         } else {
           totalShippingPrice = cityShippingPrice;
@@ -1999,7 +2023,7 @@ class MainCubit extends Cubit<MainState> {
         //     extraShippingPrice += 10;
         //   }
         //
-        //   print(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
+        //   debugPrint(">>>>>>>>>>>>>>>>>>>>${element.vendorId}");
         // });
       }
     }
@@ -2013,10 +2037,10 @@ class MainCubit extends Cubit<MainState> {
       finalTotalCart =
           firstTotalCart + totalShippingPrice + extraShippingPrice + overTax;
     }
-    print(">>>>>>>>>>>>>>>>>>>>$extraShippingPrice");
-    print(">>>>>>>>>>>>>>>>>>>>$totalShippingPrice");
-    print(">>>>>>>>>>>>>>>>>>>>$firstTotalCart");
-    print(">>>>>>>>>>>>>>>>>>>>$finalTotalCart");
+    debugPrint(">>>>>>>>>>>>>>>>>>>>$extraShippingPrice");
+    debugPrint(">>>>>>>>>>>>>>>>>>>>$totalShippingPrice");
+    debugPrint(">>>>>>>>>>>>>>>>>>>>$firstTotalCart");
+    debugPrint(">>>>>>>>>>>>>>>>>>>>$finalTotalCart");
   }
 
 // sum shipping  ----------------------end
